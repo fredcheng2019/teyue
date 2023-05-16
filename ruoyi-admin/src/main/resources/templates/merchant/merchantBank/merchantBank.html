@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<input type="hidden" id="merchantId" name="merchantId" th:value="${mpMerchant.id}">
+					<div class="select-list">
+						<ul>
+							<li>
+								银行类型：<select  id="bankId" name="bankId">
+								<option value="" selected>----请选择----</option>
+							</select>
+							</li>
+
+							<li>
+								所在省：<select  id="bankProvince" name="bankProvince">
+								<option value="" selected>----请选择----</option>
+							</select>
+							</li>
+
+							<li>
+								所在市：<select  id="bankCity" name="bankCity">
+								<option value="" selected>全部</option>
+							</select>
+							</li>
+
+							<li>
+								分行：<input type="text" name="bankBranch"/>
+							</li>
+
+							<li>
+								支行：<input type="text" name="bankSubBranch"/>
+							</li>
+
+							<li>
+								联行号：<input type="text" name="bankUnionNo"/>
+							</li>
+
+							<li>
+								持卡人：<input type="text" name="bankAccountOwner"/>
+							</li>
+
+							<li>
+								卡号：<input type="text" name="bankAccountNo"/>
+							</li>
+
+							<li>
+								账户类型：<select name="bankAccountType" id="bankAccountType">
+								<option value="" selected>所有</option>
+								<option value="0">对私</option>
+								<option value="1">对公</option>
+							</select>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="addMerchantBank()">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var $form = $("#formId");
+        var $province = $form.find("select[name='bankProvince']");
+        var $city = $form.find("select[name='bankCity']");
+        var prefix = ctx + "merchant/merchantBank";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                queryParams: queryParams,
+                modalName: "",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '标识',
+					visible: false
+				},
+				{
+					field : 'merchantId', 
+					title : '商户标识',
+					sortable: true,
+                    visible: false
+				},
+                {
+                    field : 'merchantName',
+                    title : '商户名称'
+                },
+				{
+					field : 'bankId', 
+					title : '银行标识',
+					sortable: true,
+                    visible: false
+				},
+                {
+                    field : 'bankName',
+                    title : '银行名称'
+                },
+				{
+					field : 'bankBranch', 
+					title : '分行',
+					sortable: true
+				},
+				{
+					field : 'bankSubBranch', 
+					title : '支行',
+					sortable: true
+				},
+				{
+					field : 'bankProvince', 
+					title : '所在省',
+					sortable: true
+				},
+				{
+					field : 'bankCity', 
+					title : '所在市',
+					sortable: true
+				},
+				{
+					field : 'bankUnionNo', 
+					title : '联行号',
+					sortable: true
+				},
+				{
+					field : 'bankAccountOwner', 
+					title : '持卡人',
+					sortable: true
+				},
+				{
+					field : 'bankAccountNo', 
+					title : '卡号',
+					sortable: true
+				},
+				{
+					field : 'bankAccountType', 
+					title : '账户类型',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value === 0) {
+                            return '<span>对私</span>';
+                        }else if (value === 1) {
+                            return '<span>对公</span>';
+                        }
+                    }
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs '  + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        // 商户id
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.merchantId = $("#merchantId").val();
+            return search;
+        }
+
+        /*银行类型下拉框*/
+        $.post(ctx + "basedata/bank/list", {'name':''},function (response) {
+            var data = response.rows;
+            var option = "<option value=''>" + "全部" + "</option>";
+            for (var i = 0; i < data.length; i++) {
+                option += "<option value='"+ data[i].id +"'>" + data[i].name + "</option>"
+            }
+            $("#formId").find("select[name='bankId']").html("").append(option);
+        });
+
+
+        /*初始化省市县*/
+		/*初始化-省*/
+        $.post(ctx + "basedata/areas/list",{'levelType':1,'parentId':100000},function (response) {
+            var data = response.rows;
+            var option = "<option value=''>" + "全部" + "</option>";
+            for (var i = 0; i < data.length; i++){
+                option += "<option value='" + data[i].province + "'>" + data[i].province + "</option>"
+            }
+            $province.html("").append(option);
+        });
+        /*省下拉框-选择事件*/
+        var str="<option value=''>" + "全部" + "</option>";
+        $province.change(function () {
+            $city.html(str);
+            if ($province.val())
+                getCityOrCounty(2, $province.val(), $city, $city.val());
+        });
+
+		/*根据省查询市*/
+        function getCityOrCounty(LevelType,province,htm,address) {
+            $.post(ctx + "basedata/areas/parentId", {'levelType':LevelType,'province':province}, function (response) {
+                var data = response.rows;
+                var option = "<option value=''>" +"全部"+ "</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (data.city == address) {
+                        option += "<option value='" + data[i].city + "' selected>" + data[i].city + "</option>"
+                    }else {
+                        option += "<option value='" + data[i].city + "'>" + data[i].city + "</option>"
+                    }
+                }
+                htm.html("").append(option);
+            });
+        }
+
+
+        // 添加收款银行
+        function addMerchantBank() {
+            var url = prefix + '/add/' + $("#merchantId").val();
+            $.modal.open("添加收款银行", url);
+        }
+
+	</script>
+</body>
+</html>

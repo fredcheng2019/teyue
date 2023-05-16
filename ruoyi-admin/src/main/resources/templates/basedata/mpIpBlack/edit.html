@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-mpIpBlack-edit" th:object="${mpIpBlack}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">ip：</label>
+				<div class="col-sm-8">
+					<input id="ip" name="ip" th:field="*{ip}" class="form-control" type="text" required>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "basedata/mpIpBlack";
+		$.validator.addMethod("ip",function (value, element, params) {
+			if (value !== "" && value !== null) {
+				var exp_ip = new RegExp(params);
+				return exp_ip.test(value);
+			}else {
+				return true;
+			}
+		},"请输入正确的IP地址");
+		$("#form-mpIpBlack-edit").validate({
+			rules:{
+				ip:{
+					ip: "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."+"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." +"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." +"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$",
+					required:true,
+					remote: {
+						url:prefix + "/checkIpUnique",
+						type: "post",
+						dataType: "json",
+						data: {
+							"ip":function () {
+								return $.common.trim($("#ip").val());
+							},
+							"id":function () {
+								return $.common.trim($("#id").val());
+							}
+						},
+						dataFilter: function(data, type) {
+							return $.validate.unique(data);
+						}
+					}
+				}
+			},
+			messages: {
+				"ip": {
+					remote: "该IP已经存在"
+				}
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-mpIpBlack-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

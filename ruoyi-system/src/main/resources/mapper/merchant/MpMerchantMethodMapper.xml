@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.MpMerchantMethodMapper">
+    
+    <resultMap type="MpMerchantMethod" id="MpMerchantMethodResult">
+        <result property="id"    column="id"    />
+        <result property="payRate"    column="pay_rate"    />
+        <result property="level"    column="level"    />
+        <result property="status"    column="status"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="merchantCode"    column="merchant_code"    />
+        <result property="merchantStatus"    column="merchant_status"    />
+        <result property="channelMethodId"    column="channel_method_id"    />
+        <result property="channelMethodStatus"    column="channel_method_status"    />
+        <result property="channelMethodPayRate"    column="channel_method_pay_rate"    />
+        <result property="channelMethodPayLimitLeft"    column="channel_method_pay_limit_left"    />
+        <result property="channelMethodPayLimitRight"    column="channel_method_pay_limit_right"    />
+        <result property="channelId"    column="channel_id"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="channelCode"    column="channel_code"    />
+        <result property="channelStatus"    column="channel_status"    />
+        <result property="channelWithdrawalLevel"    column="channel_withdrawal_level"    />
+        <result property="channelWithdrawalFee"    column="channel_withdrawal_fee"    />
+        <result property="channelMchWithdrawalFee"    column="channel_mch_withdrawal_fee"    />
+        <result property="channelWithdrawalLimtLeft"    column="channel_withdrawal_limt_left"    />
+        <result property="channelWithdrawalLimtRight"   column="channel_withdrawal_limt_right"    />
+        <result property="channelClassName"    column="channel_class_name"    />
+        <result property="channelReqUrl"    column="channel_req_url"    />
+        <result property="channelSecretKey"    column="channel_secret_key"    />
+        <result property="channelWithdrawalInner"    column="channel_withdrawal_inner"    />
+        <result property="payKindId"    column="pay_kind_id"    />
+        <result property="payKindName"    column="pay_kind_name"    />
+        <result property="payKindCode"    column="pay_kind_code"    />
+        <result property="walletKindId"    column="wallet_kind_id"    />
+        <result property="walletKindName"    column="wallet_kind_name"    />
+        <result property="walletKindCode"    column="wallet_kind_code"    />
+        <result property="methodPayLimitLeft"    column="method_pay_limit_left"    />
+        <result property="methodPayLimitRight"    column="method_pay_limit_right"    />
+    </resultMap>
+
+    <resultMap id="MpMerchantMethodRspResult" type="com.ruoyi.merchant.domain.MpMerchantMethodRSP" extends="MpMerchantMethodResult" autoMapping="true">
+    </resultMap>
+
+
+	<sql id="selectMpMerchantMethodVo">
+        select * from mp_merchant_method
+    </sql>
+	
+    <select id="selectMpMerchantMethodList" parameterType="MpMerchantMethod" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="payRate != null "> and pay_rate = #{payRate}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+            <if test="merchantName != null  and merchantName != '' "> and merchant_name like concat('%', #{merchantName}, '%')</if>
+            <if test="merchantCode != null  and merchantCode != '' "> and merchant_code = #{merchantCode}</if>
+            <if test="merchantStatus != null "> and merchant_status = #{merchantStatus}</if>
+            <if test="channelMethodId != null "> and channel_method_id = #{channelMethodId}</if>
+            <if test="channelMethodStatus != null "> and channel_method_status = #{channelMethodStatus}</if>
+            <if test="channelMethodPayRate != null "> and channel_method_pay_rate = #{channelMethodPayRate}</if>
+            <if test="channelMethodPayLimitLeft != null "> and channel_method_pay_limit_left = #{channelMethodPayLimitLeft}</if>
+            <if test="channelMethodPayLimitRight != null "> and channel_method_pay_limit_right = #{channelMethodPayLimitRight}</if>
+            <if test="channelId != null "> and channel_id = #{channelId}</if>
+            <if test="channelName != null  and channelName != '' "> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="channelCode != null  and channelCode != '' "> and channel_code = #{channelCode}</if>
+            <if test="channelStatus != null "> and channel_status = #{channelStatus}</if>
+            <if test="channelWithdrawalLevel != null "> and channel_withdrawal_level = #{channelWithdrawalLevel}</if>
+            <if test="channelWithdrawalFee != null "> and channel_withdrawal_fee = #{channelWithdrawalFee}</if>
+            <if test="channelMchWithdrawalFee != null "> and channel_mch_withdrawal_fee = #{channelMchWithdrawalFee}</if>
+            <if test="channelWithdrawalLimtLeft != null "> and channel_withdrawal_limt_left = #{channelWithdrawalLimtLeft}</if>
+            <if test="channelWithdrawalLimtRight != null "> and channel_withdrawal_limt_right = #{channelWithdrawalLimtRight}</if>
+            <if test="channelClassName != null "> and channel_class_name like concat('%', #{channelClassName}, '%')</if>
+            <if test="channelReqUrl != null "> and channel_req_url = #{channelClassName}</if>
+            <if test="channelSecretKey != null "> and channel_secret_key = #{channelSecretKey}</if>
+            <if test="channelWithdrawalInner != null "> and channel_withdrawal_inner = #{channelWithdrawalInner}</if>
+            <if test="payKindId != null "> and pay_kind_id = #{payKindId}</if>
+            <if test="payKindName != null  and payKindName != '' "> and pay_kind_name like concat('%', #{payKindName}, '%')</if>
+            <if test="payKindCode != null  and payKindCode != '' "> and pay_kind_code = #{payKindCode}</if>
+            <if test="walletKindId != null "> and wallet_kind_id = #{walletKindId}</if>
+            <if test="walletKindName != null  and walletKindName != '' "> and wallet_kind_name like concat('%', #{walletKindName}, '%')</if>
+            <if test="walletKindCode != null  and walletKindCode != '' "> and wallet_kind_code = #{walletKindCode}</if>
+            <if test="methodPayLimitLeft != null "> and method_pay_limit_left = #{methodPayLimitLeft}</if>
+            <if test="methodPayLimitRight != null "> and method_pay_limit_right = #{methodPayLimitRight}</if>
+        </where>
+        order by channel_name desc
+    </select>
+    
+    <select id="selectMpMerchantMethodById" parameterType="Long" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMpMerchantMethod" parameterType="MpMerchantMethod" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_merchant_method
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="payRate != null  ">pay_rate,</if>
+            <if test="level != null  ">level,</if>
+            <if test="status != null  ">status,</if>
+            <if test="merchantId != null  ">merchant_id,</if>
+            <if test="merchantName != null  and merchantName != ''  ">merchant_name,</if>
+            <if test="merchantCode != null  and merchantCode != ''  ">merchant_code,</if>
+            <if test="merchantStatus != null  ">merchant_status,</if>
+            <if test="channelMethodId != null  ">channel_method_id,</if>
+            <if test="channelMethodStatus != null  ">channel_method_status,</if>
+            <if test="channelMethodPayRate != null  ">channel_method_pay_rate,</if>
+            <if test="channelMethodPayLimitLeft != null  ">channel_method_pay_limit_left,</if>
+            <if test="channelMethodPayLimitRight != null  ">channel_method_pay_limit_right,</if>
+            <if test="channelId != null  ">channel_id,</if>
+            <if test="channelName != null  and channelName != ''  ">channel_name,</if>
+            <if test="channelCode != null  and channelCode != ''  ">channel_code,</if>
+            <if test="channelStatus != null  ">channel_status,</if>
+            <if test="channelWithdrawalLevel != null  ">channel_withdrawal_level,</if>
+            <if test="channelWithdrawalFee != null  ">channel_withdrawal_fee,</if>
+            <if test="channelMchWithdrawalFee != null  ">channel_mch_withdrawal_fee,</if>
+            <if test="channelWithdrawalLimtLeft != null  ">channel_withdrawal_limt_left,</if>
+            <if test="channelWithdrawalLimtRight != null  ">channel_withdrawal_limt_right,</if>
+            <if test="channelClassName != null  ">channel_class_name,</if>
+            <if test="channelReqUrl != null  ">channel_req_url,</if>
+            <if test="channelSecretKey != null  ">channel_secret_key,</if>
+            <if test="channelWithdrawalInner != null  ">channel_withdrawal_inner,</if>
+            <if test="payKindId != null  ">pay_kind_id,</if>
+            <if test="payKindName != null  and payKindName != ''  ">pay_kind_name,</if>
+            <if test="payKindCode != null  and payKindCode != ''  ">pay_kind_code,</if>
+            <if test="walletKindId != null  ">wallet_kind_id,</if>
+            <if test="walletKindName != null  and walletKindName != ''  ">wallet_kind_name,</if>
+            <if test="walletKindCode != null  and walletKindCode != ''  ">wallet_kind_code,</if>
+            <if test="methodPayLimitLeft != null  ">method_pay_limit_left,</if>
+            <if test="methodPayLimitRight != null  ">method_pay_limit_right,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="payRate != null  ">#{payRate},</if>
+            <if test="level != null  ">#{level},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="merchantId != null  ">#{merchantId},</if>
+            <if test="merchantName != null  and merchantName != ''  ">#{merchantName},</if>
+            <if test="merchantCode != null  and merchantCode != ''  ">#{merchantCode},</if>
+            <if test="merchantStatus != null  ">#{merchantStatus},</if>
+            <if test="channelMethodId != null  ">#{channelMethodId},</if>
+            <if test="channelMethodStatus != null  ">#{channelMethodStatus},</if>
+            <if test="channelMethodPayRate != null  ">#{channelMethodPayRate},</if>
+            <if test="channelMethodPayLimitLeft != null  ">#{channelMethodPayLimitLeft},</if>
+            <if test="channelMethodPayLimitRight != null  ">#{channelMethodPayLimitRight},</if>
+            <if test="channelId != null  ">#{channelId},</if>
+            <if test="channelName != null  and channelName != ''  ">#{channelName},</if>
+            <if test="channelCode != null  and channelCode != ''  ">#{channelCode},</if>
+            <if test="channelStatus != null  ">#{channelStatus},</if>
+            <if test="channelWithdrawalLevel != null  ">#{channelWithdrawalLevel},</if>
+            <if test="channelWithdrawalFee != null  ">#{channelWithdrawalFee},</if>
+            <if test="channelMchWithdrawalFee != null  ">#{channelMchWithdrawalFee},</if>
+            <if test="channelWithdrawalLimtLeft != null  ">#{channelWithdrawalLimtLeft},</if>
+            <if test="channelWithdrawalLimtRight != null  ">#{channelWithdrawalLimtRight},</if>
+            <if test="channelClassName != null  ">#{channelClassName},</if>
+            <if test="channelReqUrl != null  ">#{channelReqUrl},</if>
+            <if test="channelSecretKey != null  ">#{channelSecretKey},</if>
+            <if test="channelWithdrawalInner != null  ">#{channelWithdrawalInner},</if>
+            <if test="payKindId != null  ">#{payKindId},</if>
+            <if test="payKindName != null  and payKindName != ''  ">#{payKindName},</if>
+            <if test="payKindCode != null  and payKindCode != ''  ">#{payKindCode},</if>
+            <if test="walletKindId != null  ">#{walletKindId},</if>
+            <if test="walletKindName != null  and walletKindName != ''  ">#{walletKindName},</if>
+            <if test="walletKindCode != null  and walletKindCode != ''  ">#{walletKindCode},</if>
+            <if test="methodPayLimitLeft != null  ">#{methodPayLimitLeft},</if>
+            <if test="methodPayLimitRight != null  ">#{methodPayLimitRight},</if>
+        </trim>
+    </insert>
+	 
+    <update id="updateMpMerchantMethod" parameterType="MpMerchantMethod">
+        update mp_merchant_method
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payRate != null  ">pay_rate = #{payRate},</if>
+            <if test="level != null  ">level = #{level},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="merchantId != null  ">merchant_id = #{merchantId},</if>
+            <if test="merchantName != null  and merchantName != ''  ">merchant_name = #{merchantName},</if>
+            <if test="merchantCode != null  and merchantCode != ''  ">merchant_code = #{merchantCode},</if>
+            <if test="merchantStatus != null  ">merchant_status = #{merchantStatus},</if>
+            <if test="channelMethodId != null  ">channel_method_id = #{channelMethodId},</if>
+            <if test="channelMethodStatus != null  ">channel_method_status = #{channelMethodStatus},</if>
+            <if test="channelMethodPayRate != null  ">channel_method_pay_rate = #{channelMethodPayRate},</if>
+            <if test="channelMethodPayLimitLeft != null  ">channel_method_pay_limit_left = #{channelMethodPayLimitLeft},</if>
+            <if test="channelMethodPayLimitRight != null  ">channel_method_pay_limit_right = #{channelMethodPayLimitRight},</if>
+            <if test="channelId != null  ">channel_id = #{channelId},</if>
+            <if test="channelName != null  and channelName != ''  ">channel_name = #{channelName},</if>
+            <if test="channelCode != null  and channelCode != ''  ">channel_code = #{channelCode},</if>
+            <if test="channelStatus != null  ">channel_status = #{channelStatus},</if>
+            <if test="channelWithdrawalLevel != null  ">channel_withdrawal_level = #{channelWithdrawalLevel},</if>
+            <if test="channelWithdrawalFee != null  ">channel_withdrawal_fee = #{channelWithdrawalFee},</if>
+            <if test="channelMchWithdrawalFee != null  ">channel_mch_withdrawal_fee = #{channelMchWithdrawalFee},</if>
+            <if test="channelWithdrawalLimtLeft != null  ">channel_withdrawal_limt_left = #{channelWithdrawalLimtLeft},</if>
+            <if test="channelWithdrawalLimtRight != null  ">channel_withdrawal_limt_right = #{channelWithdrawalLimtRight},</if>
+            <if test="channelClassName != null  ">channel_class_name = #{channelClassName},</if>
+            <if test="channelReqUrl != null  ">channel_req_url = #{channelReqUrl},</if>
+            <if test="channelSecretKey != null  ">channel_secret_key = #{channelSecretKey},</if>
+            <if test="channelWithdrawalInner != null  ">channel_withdrawal_inner = #{channelWithdrawalInner},</if>
+            <if test="payKindId != null  ">pay_kind_id = #{payKindId},</if>
+            <if test="payKindName != null  and payKindName != ''  ">pay_kind_name = #{payKindName},</if>
+            <if test="payKindCode != null  and payKindCode != ''  ">pay_kind_code = #{payKindCode},</if>
+            <if test="walletKindId != null  ">wallet_kind_id = #{walletKindId},</if>
+            <if test="walletKindName != null  and walletKindName != ''  ">wallet_kind_name = #{walletKindName},</if>
+            <if test="walletKindCode != null  and walletKindCode != ''  ">wallet_kind_code = #{walletKindCode},</if>
+            <if test="methodPayLimitLeft != null  ">method_pay_limit_left = #{methodPayLimitLeft},</if>
+            <if test="methodPayLimitRight != null  ">method_pay_limit_right = #{methodPayLimitRight},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMpMerchantMethodById" parameterType="Long">
+        delete from mp_merchant_method where id = #{id}
+    </delete>
+	
+    <delete id="deleteMpMerchantMethodByIds" parameterType="String">
+        delete from mp_merchant_method where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="checkMerchantLevelUnique"  resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where level = #{level}
+    </select>
+
+
+    <select id="selectMpMerchantMethodByChannelMthodAndMerchant" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where
+        channel_method_id = #{channelMethodId}
+        and
+        merchant_id = #{merchantId}
+    </select>
+
+
+    <select id="checkChannelMethodIdUnique" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where
+        channel_method_id = #{channelMethodId}
+        and
+        merchant_id = #{merchantId}
+    </select>
+
+
+
+    <select id="selectMpMerchantMethodByWalletId" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where
+        wallet_kind_id = #{walletKindId}
+    </select>
+
+
+
+    <select id="selectMpMerchantMethodByPayKindId" resultMap="MpMerchantMethodResult">
+        <include refid="selectMpMerchantMethodVo"/>
+        where
+        pay_kind_id = #{payKindId}
+    </select>
+
+
+
+    <insert id="insertMerchantMethodList"   parameterType="java.util.List">
+        INSERT INTO mp_merchant_method (
+        pay_rate,
+        level,
+        status,
+        merchant_id,
+        merchant_name,
+        merchant_code,
+        merchant_status,
+        channel_method_id,
+        channel_method_status,
+        channel_method_pay_rate,
+        channel_method_pay_limit_left,
+        channel_method_pay_limit_right,
+        channel_id,
+        channel_name,
+        channel_code,
+        channel_status,
+        channel_withdrawal_level,
+        channel_withdrawal_fee,
+        channel_mch_withdrawal_fee,
+        channel_withdrawal_limt_left,
+        channel_withdrawal_limt_right,
+        channel_class_name,
+        channel_req_url,
+        channel_secret_key,
+        channel_withdrawal_inner,
+        pay_kind_id,
+        pay_kind_name,
+        pay_kind_code,
+        wallet_kind_id,
+        wallet_kind_name,
+        wallet_kind_code,
+        method_pay_limit_left,
+        method_pay_limit_right
+        )
+        VALUES
+        <foreach collection="merchantMethodList" item="item" separator="," index="index">
+            (
+            #{item.payRate},
+            #{item.level},
+            #{item.status},
+            #{item.merchantId},
+            #{item.merchantName},
+            #{item.merchantCode},
+            #{item.merchantStatus},
+            #{item.channelMethodId},
+            #{item.channelMethodStatus},
+            #{item.channelMethodPayRate},
+            #{item.channelMethodPayLimitLeft},
+            #{item.channelMethodPayLimitRight},
+            #{item.channelId},
+            #{item.channelName},
+            #{item.channelCode},
+            #{item.channelStatus},
+            #{item.channelWithdrawalLevel},
+            #{item.channelWithdrawalFee},
+            #{item.channelMchWithdrawalFee},
+            #{item.channelWithdrawalLimtLeft},
+            #{item.channelWithdrawalLimtRight},
+            #{item.channelClassName},
+            #{item.channelReqUrl},
+            #{item.channelSecretKey},
+            #{item.channelWithdrawalInner},
+            #{item.payKindId},
+            #{item.payKindName},
+            #{item.payKindCode},
+            #{item.walletKindId},
+            #{item.walletKindName},
+            #{item.walletKindCode},
+            #{item.methodPayLimitLeft},
+            #{item.methodPayLimitRight}
+            )
+        </foreach>
+    </insert>
+
+
+
+    <update id="updateMethodByParams" >
+        update mp_merchant_method
+        set
+        status = #{status},
+        pay_rate = #{payRate}
+        <where>
+            <if test="channelId != null and channelId != -1"> and channel_id = #{channelId}</if>
+            <if test="merchantId != null and merchantId != -1"> and merchant_id = #{merchantId}</if>
+            <if test="channelMethodId != null and channelMethodId != -1"> and channel_method_id = #{channelMethodId}</if>
+        </where>
+    </update>
+
+
+    <update id="updateMethodBySwitchParams" >
+        update mp_merchant_method
+        set
+        status = #{status}
+        <where>
+            <if test="channelId != null and channelId != -1"> and channel_id = #{channelId}</if>
+            <if test="merchantId != null and merchantId != -1"> and merchant_id = #{merchantId}</if>
+            <if test="channelMethodId != null and channelMethodId != -1"> and channel_method_id = #{channelMethodId}</if>
+        </where>
+    </update>
+
+    <update id="updateMethodByPayLimit" >
+        update mp_merchant_method
+        set
+        method_pay_limit_left = #{payLimitLeft},
+        method_pay_limit_right = #{payLimitRight}
+        <where>
+            <if test="channelId != null and channelId != -1"> and channel_id = #{channelId}</if>
+            <if test="merchantId != null and merchantId != -1"> and merchant_id = #{merchantId}</if>
+            <if test="channelMethodId != null and channelMethodId != -1"> and channel_method_id = #{channelMethodId}</if>
+        </where>
+    </update>
+
+</mapper>

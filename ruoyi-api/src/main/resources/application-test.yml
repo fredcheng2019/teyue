@@ -1,0 +1,49 @@
+server:
+  port: 9082
+  max-http-header-size: 4048576
+  tomcat:
+    max-http-post-size: 1000MB  #请求参数长度
+
+spring:
+  ##数据库连接信息
+  datasource:
+    url: jdbc:mysql://156.226.16.229:56423/sifang?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: sifang
+    password: NengyiMysql@qw.45
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    ###################以下为druid增加的配置###########################
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initialSize: 50
+    minIdle: 50
+    maxActive: 250
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,logback
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+  ###############以上为配置druid添加的配置########################################
+
+#系统配置
+sifang:
+  system:
+    notify-url: http://localhost:9082/api/notify/
+    redirect-url: http://120.197.52.117:9082/api/pay_result/pay_result
+    #支付中转地址
+    jump-pay-url: http://120.197.52.117:9082/api/jump/pay
+    platform-white-list: 172.31.71.45,192.168.6.155,192.168.6.159,192.168.4.214

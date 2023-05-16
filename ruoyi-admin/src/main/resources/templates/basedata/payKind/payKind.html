@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+  <th:block th:include="include :: header('列表')"/>
+</head>
+<body class="gray-bg">
+
+<div class="container-div">
+  <div class="row">
+    <div class="col-sm-12 search-collapse">
+      <form id="formId" class="layui-form search-body">
+        <div  class="search-item">
+          <label>支付类型名称：</label>
+          <input type="text" class="layui-input" name="name"/>
+        </div>
+        <div  class="search-item">
+          <label>编码：</label>
+          <input type="text" class="layui-input" name="code"/>
+        </div>
+        <div  class="search-item">
+          <button class="layui-btn layui-btn-sm layui-btn-normal" type="button" onclick="$.table.search()"><i
+              class="fa fa-search"></i>&nbsp;搜索
+          </button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" type="button" onclick="$.form.reset()"><i
+              class="fa fa-refresh"></i>&nbsp;重置
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="btn-group-sm" id="toolbar" role="group">
+      <button class="layui-btn layui-btn-sm" onclick="$.operate.add()" shiro:hasPermission="basedata:paykind:add">
+        <i class="fa fa-plus"></i> 添加
+      </button>
+      <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="$.table.exportExcel()"
+              shiro:hasPermission="basedata:paykind:export">
+        <i class="fa fa-download"></i> 导出
+      </button>
+    </div>
+    <div class="col-sm-12 select-table table-striped">
+      <table class="layui-table" id="bootstrap-table" data-mobile-responsive="true"></table>
+    </div>
+  </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+  var editFlag = [[${@permission.hasPermi('basedata:paykind:edit')}]];
+  var removeFlag = [[${@permission.hasPermi('basedata:paykind:remove')}]];
+  var prefix = ctx + "basedata/paykind";
+
+  $(function () {
+    var options = {
+      url: prefix + "/list",
+      createUrl: prefix + "/add",
+      updateUrl: prefix + "/edit/{id}",
+      removeUrl: prefix + "/remove",
+      exportUrl: prefix + "/export",
+      modalName: "支付类型",
+      showExport: true,
+      columns: [
+        {
+          field: 'id',
+          title: '标识',
+          visible: false
+        },
+        {
+          field: 'name',
+          title: '支付类型名称',
+          sortable: true
+        },
+        {
+          field: 'code',
+          title: '编码',
+          sortable: true
+        },
+        {
+          title: '操作',
+          align: 'center',
+          formatter: function (value, row, index) {
+            var actions = [];
+            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+            return actions.join('');
+          }
+        }]
+    };
+    $.table.init(options);
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.MpMerchantMapper">
+
+    <resultMap type="MpMerchant" id="MpMerchantResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="contactEmail" column="contact_email"/>
+        <result property="secretKey" column="secret_key"/>
+        <result property="withdrawalPassword" column="withdrawal_password"/>
+        <result property="googleSecret" column="google_secret"/>
+        <result property="isAgent" column="is_agent"/>
+        <result property="agentId" column="agent_id"/>
+        <result property="agentProfit" column="agent_profit"/>
+        <result property="dfChannelId" column="df_channel_id"/>
+        <result property="openAdvance"    column="open_advance"    />
+
+    </resultMap>
+
+    <resultMap id="MpMerchantRspResult" type="com.ruoyi.merchant.domain.MpMerchantRSP" extends="MpMerchantResult"
+               autoMapping="true">
+    </resultMap>
+
+    <sql id="selectMpMerchantVo">
+        select id, name, code, status, user_id, contact_name, contact_phone, contact_email, secret_key, withdrawal_password, google_secret,is_agent,agent_id,agent_profit,df_channel_id, open_advance from mp_merchant
+    </sql>
+
+    <select id="selectMpMerchantList" parameterType="MpMerchant" resultMap="MpMerchantRspResult">
+        select mc.*,
+        su.login_name as userLoginName,
+        ifnull(au.login_name,'无') as 'agentName'
+        from mp_merchant mc
+        left join sys_user su on mc.user_id = su.user_id
+        left join sys_user au on mc.agent_id = au.user_id
+        <where>
+            mc.is_agent = #{isAgent}
+            <if test="id != null ">and mc.id = #{id}</if>
+            <if test="name != null  and name != '' ">and mc.name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != '' ">and mc.code like concat('%', #{code}, '%')</if>
+            <if test="status != null ">and mc.status = #{status}</if>
+            <if test="userId != null ">and mc.user_id = #{userId}</if>
+            <if test="contactName != null  and contactName != '' ">
+                and mc.contact_name like concat('%', #{contactName}, '%')
+            </if>
+            <if test="contactPhone != null  and contactPhone != '' ">
+                and mc.contact_phone like concat('%', #{contactPhone},'%')
+            </if>
+            <if test="contactEmail != null  and contactEmail != '' ">
+                and mc.contact_email like concat('%', #{contactEmail},'%')
+            </if>
+            <if test="secretKey != null  and secretKey != '' ">and mc.secret_key = #{secretKey}</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != '' ">
+                and mc.withdrawal_password = #{withdrawalPassword}
+            </if>
+            <if test="googleSecret != null  and googleSecret != '' ">and mc.google_secret = #{googleSecret}</if>
+            <if test="agentId != null and agentId !=0">and mc.agent_id = #{agentId}</if>
+            <if test="openAdvance != null "> and open_advance = #{openAdvance}</if>
+        </where>
+    </select>
+
+    <select id="selectMpMerchantById" parameterType="Long" resultMap="MpMerchantResult">
+        <include refid="selectMpMerchantVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMpMerchantByUserId" parameterType="Long" resultMap="MpMerchantResult">
+        <include refid="selectMpMerchantVo"/>
+        where user_id = #{id}
+    </select>
+
+    <insert id="insertMpMerchant" parameterType="MpMerchant" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name,</if>
+            <if test="code != null  and code != ''  ">code,</if>
+            <if test="status != null  ">status,</if>
+            <if test="userId != null  ">user_id,</if>
+            <if test="contactName != null  and contactName != ''  ">contact_name,</if>
+            <if test="contactPhone != null  and contactPhone != ''  ">contact_phone,</if>
+            <if test="contactEmail != null  and contactEmail != ''  ">contact_email,</if>
+            <if test="secretKey != null  and secretKey != ''  ">secret_key,</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">withdrawal_password,</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">google_secret,</if>
+            <if test="isAgent != null  and isAgent != ''  ">is_agent,</if>
+            <if test="agentId != null  and agentId != ''  ">agent_id,</if>
+            <if test="agentProfit != null  and agentProfit != ''  ">agent_profit,</if>
+            <if test="openAdvance != null  ">open_advance,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="code != null  and code != ''  ">#{code},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="userId != null  ">#{userId},</if>
+            <if test="contactName != null  and contactName != ''  ">#{contactName},</if>
+            <if test="contactPhone != null  and contactPhone != ''  ">#{contactPhone},</if>
+            <if test="contactEmail != null  and contactEmail != ''  ">#{contactEmail},</if>
+            <if test="secretKey != null  and secretKey != ''  ">#{secretKey},</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">#{withdrawalPassword},</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">#{googleSecret},</if>
+            <if test="isAgent != null  and isAgent != ''  ">#{isAgent},</if>
+            <if test="agentId != null  and agentId != ''  ">#{agentId},</if>
+            <if test="agentProfit != null  and agentProfit != ''  ">#{agentProfit},</if>
+            <if test="openAdvance != null  ">#{openAdvance},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateMpMerchant" parameterType="MpMerchant">
+        update mp_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <!--<if test="code != null  and code != ''  ">code = #{code},</if>-->
+            <if test="status != null  ">status = #{status},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="contactName != null  and contactName != ''  ">contact_name = #{contactName},</if>
+            <if test="contactPhone != null  and contactPhone != ''  ">contact_phone = #{contactPhone},</if>
+            <if test="contactEmail != null  and contactEmail != ''  ">contact_email = #{contactEmail},</if>
+            <if test="secretKey != null  and secretKey != ''  ">secret_key = #{secretKey},</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">
+                withdrawal_password =#{withdrawalPassword},
+            </if>
+            <if test="googleSecret != null  and googleSecret != ''  ">google_secret = #{googleSecret},</if>
+            <if test="isAgent != null  and isAgent != ''  ">is_agent = #{isAgent},</if>
+            <if test="agentId != null  and agentId != ''  ">agent_id = #{agentId},</if>
+            <if test="agentProfit != null  and agentProfit != ''  ">agent_profit = #{agentProfit},</if>
+            <if test="dfChannelId != null  ">df_channel_id = #{dfChannelId},</if>
+            <if test="openAdvance != null  ">open_advance = #{openAdvance},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMpMerchantById" parameterType="Long">
+        delete from mp_merchant where id = #{id}
+    </delete>
+
+    <delete id="deleteMpMerchantByIds" parameterType="String">
+        delete from mp_merchant where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="checkMerchantNameUnique" parameterType="String" resultMap="MpMerchantResult">
+        select id, name, code, status, user_id, contact_name, contact_phone, contact_email, secret_key, withdrawal_password, google_secret, open_advance from mp_merchant
+        where name=#{name}
+	</select>
+
+    <select id="checkAccountUnique" parameterType="String" resultType="int">
+        select count(login_name)
+        from sys_user
+        where login_name = #{account}
+	</select>
+
+
+    <select id="checkCodeUnique" parameterType="String" resultType="int">
+        select count(code)
+        from mp_merchant
+        where code = #{code}
+	</select>
+
+    <select id="selectMaxMerchantNo"  resultType="java.lang.String">
+        select max(code) from mp_merchant
+	</select>
+</mapper>

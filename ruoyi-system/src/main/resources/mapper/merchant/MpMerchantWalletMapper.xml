@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.MpMerchantWalletMapper">
+
+    <resultMap type="MpMerchantWallet" id="MpMerchantWalletResult">
+        <result property="id"    column="id"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="walletKindId"    column="wallet_kind_id"    />
+        <result property="accountBalance"    column="account_balance"    />
+        <result property="frozenBalance"    column="frozen_balance"    />
+        <result property="waitLiquidatedBalance"    column="wait_liquidated_balance"    />
+        <result property="unliquidatedBalanceOne"    column="unliquidated_balance_one"    />
+        <result property="unliquidatedBalanceTwo"    column="unliquidated_balance_two"    />
+        <result property="dZero"    column="d_zero"    />
+        <result property="advanceBalance"    column="advance_balance"    />
+    </resultMap>
+
+    <resultMap id="MpMerchantWalletVoResult" type="com.ruoyi.merchant.domain.MpMerchantWalletVo" extends="MpMerchantWalletResult" autoMapping="true">
+    </resultMap>
+
+
+	<sql id="selectMpMerchantWalletVo">
+        select id, merchant_id, wallet_kind_id, account_balance,advance_balance, frozen_balance, unliquidated_balance_one, unliquidated_balance_two, wait_liquidated_balance, d_zero from mp_merchant_wallet
+    </sql>
+
+    <select id="selectMpMerchantWalletList" parameterType="MpMerchantWallet" resultMap="MpMerchantWalletVoResult">
+        SELECT
+        mmw.*,
+        mm.id,
+        mm.name merchantName,
+        mwk.id,
+        mwk.name walletKindName
+        FROM
+        mp_merchant_wallet mmw,
+        mp_merchant mm,
+        mp_wallet_kind mwk
+        <where>
+             mmw.wallet_kind_id = mwk.id and mmw.merchant_id = mm.id
+            <if test="id != null "> and mmw.id = #{id}</if>
+             <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+             <if test="walletKindId != null "> and wallet_kind_id = #{walletKindId}</if>
+             <if test="accountBalance != null "> and account_balance = #{accountBalance}</if>
+             <if test="frozenBalance != null "> and frozen_balance = #{frozenBalance}</if>
+            <if test="advanceBalance != null "> and advance_balance = #{advanceBalance}</if>
+            <if test="isAgent != null "> and mm.is_agent = #{isAgent}</if>
+         </where>
+    </select>
+
+    <!--统计总数量-->
+    <select id="selectStatistics" parameterType="MpMerchantWallet"
+            resultType="com.ruoyi.merchant.domain.MpMerchantWalletVo">
+
+        select ROUND(sum(mmw.account_balance)/100,2) as accountBalance, ROUND(sum(mmw.wait_liquidated_balance)/100,2) as waitLiquidatedBalance
+        , ROUND(sum(mmw.frozen_balance)/100,2) as frozenBalance
+        from  mp_merchant_wallet mmw,
+        mp_merchant mm,
+        mp_wallet_kind mwk
+        <where>
+            mmw.wallet_kind_id = mwk.id and mmw.merchant_id = mm.id
+            <if test="id != null "> and mmw.id = #{id}</if>
+            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+            <if test="walletKindId != null "> and wallet_kind_id = #{walletKindId}</if>
+            <if test="accountBalance != null "> and account_balance = #{accountBalance}</if>
+            <if test="frozenBalance != null "> and frozen_balance = #{frozenBalance}</if>
+            <if test="advanceBalance != null "> and advance_balance = #{advanceBalance}</if>
+            <if test="isAgent != null "> and mm.is_agent = #{isAgent}</if>
+        </where>
+    </select>
+
+    <select id="selectMpMerchantWalletById" parameterType="Integer" resultMap="MpMerchantWalletResult">
+        <include refid="selectMpMerchantWalletVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMpMerchantWallet" parameterType="MpMerchantWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_merchant_wallet
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="merchantId != null  ">merchant_id,</if>
+			<if test="walletKindId != null  ">wallet_kind_id,</if>
+			<if test="accountBalance != null  ">account_balance,</if>
+			<if test="frozenBalance != null  ">frozen_balance,</if>
+			<if test="waitLiquidatedBalance != null  ">wait_liquidated_balance,</if>
+			<if test="unliquidatedBalanceOne != null  ">unliquidated_balance_one,</if>
+			<if test="unliquidatedBalanceTwo != null  ">unliquidated_balance_two,</if>
+			<if test="dZero != null  ">d_zero,</if>
+            <if test="advanceBalance != null  ">advance_balance,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="merchantId != null  ">#{merchantId},</if>
+			<if test="walletKindId != null  ">#{walletKindId},</if>
+			<if test="accountBalance != null  ">#{accountBalance},</if>
+			<if test="frozenBalance != null  ">#{frozenBalance},</if>
+			<if test="waitLiquidatedBalance != null  ">#{waitLiquidatedBalance},</if>
+			<if test="unliquidatedBalanceOne != null  ">#{unliquidatedBalanceOne},</if>
+			<if test="unliquidatedBalanceTwo != null  ">#{unliquidatedBalanceTwo},</if>
+			<if test="dZero != null  ">#{dZero},</if>
+            <if test="advanceBalance != null  ">#{advanceBalance},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMpMerchantWallet" parameterType="MpMerchantWallet">
+        update mp_merchant_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dZero != null  ">d_zero = #{dZero},</if>
+            <if test="frozenBalance != null  ">frozen_balance = #{frozenBalance},</if>
+            <if test="advanceBalance != null  ">advance_balance = #{advanceBalance},</if>
+            <if test="accountBalance != null  ">account_balance = #{accountBalance},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMpMerchantWalletById" parameterType="Integer">
+        delete from mp_merchant_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteMpMerchantWalletByIds" parameterType="String">
+        delete from mp_merchant_wallet where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="checkMerchantWallet" parameterType="MpMerchantWallet" resultMap="MpMerchantWalletResult">
+        select * from mp_merchant_wallet where  merchant_id = #{merchantId} and wallet_kind_id = #{walletKindId}
+    </select>
+
+
+    <select id="selectMpMerchantWalletByMerchantIdAndWalletKindId"  resultMap="MpMerchantWalletResult">
+        select * from mp_merchant_wallet
+        where
+        merchant_id = #{merchantId}
+        and
+        wallet_kind_id = #{walletKindId}
+    </select>
+
+    <select id="channelWalletList" resultType="com.ruoyi.merchant.domain.MerchantWithdrawal">
+        SELECT
+          mcw.*,
+          mc.name AS channelName,
+          mcm.`wallet_kind_name` AS walletKindName,
+          mcm.`wallet_kind_id` AS walletKindId
+          FROM
+          `mp_channel_wallet` mcw
+          LEFT JOIN `mp_channel` mc
+          ON mcw.`channel_id` = mc.`id`
+          LEFT JOIN `mp_channel_method` mcm
+          ON mcw.`channel_id` = mcm.`channel_id`
+          WHERE
+          mc.`status` = #{status}
+          AND
+          mcm.`status` =  #{status}
+    </select>
+
+
+    <select id="getWalletByMerchantIdAndWalletKindIdAndEnoughMoney" resultMap="MpMerchantWalletResult">
+        SELECT
+         *
+         from
+         mp_merchant_wallet
+         where
+         merchant_id = #{merchantId}
+         and
+         wallet_kind_id = #{walletKindId}
+         and
+         (account_balance - frozen_balance) >= #{total_fee}
+    </select>
+
+
+    <select id="selectMpMerchantWalletVoById"  resultMap="MpMerchantWalletVoResult">
+        SELECT
+        mmw.*,
+        mm.id,
+        mm.name merchantName,
+        mwk.id,
+        mwk.name walletKindName
+        FROM
+        mp_merchant_wallet mmw,
+        mp_merchant mm,
+        mp_wallet_kind mwk
+        <where>
+            mmw.wallet_kind_id = mwk.id and mmw.merchant_id = mm.id
+            <if test="id != null "> and mmw.id = #{id}</if>
+        </where>
+    </select>
+
+
+    <select id="selectMpMerchantWalletVoByMerchantId"  resultMap="MpMerchantWalletVoResult">
+        SELECT
+        mmw.*,
+        mm.id,
+        mm.name merchantName,
+        mwk.id,
+        mwk.name walletKindName
+        FROM
+        mp_merchant_wallet mmw,
+        mp_merchant mm,
+        mp_wallet_kind mwk
+        <where>
+            mmw.wallet_kind_id = mwk.id and mmw.merchant_id = mm.id
+            and mwk.id =1
+            <if test="id != null "> and mmw.merchant_id = #{id}</if>
+        </where>
+    </select>
+
+  <update id="updateBalance" parameterType="map">
+       update mp_merchant_wallet set account_balance = account_balance + #{mchFee} where merchant_id = #{merchantId} and wallet_kind_id = #{walletKindId}
+    </update>
+
+    <select id="selectMpMerchantWalletByIdForUpdate" parameterType="Integer" resultMap="MpMerchantWalletResult">
+        <include refid="selectMpMerchantWalletVo"/>
+        where id = #{id} for update
+    </select>
+</mapper>

@@ -1,0 +1,44 @@
+package com.api.bussiness.manager.contorller;
+
+import com.alibaba.fastjson.JSON;
+import com.api.bussiness.manager.bean.ManagerRspCheckWithdrawal;
+import com.api.bussiness.manager.service.ManagerCheckWithdrawalService;
+import com.api.bussiness.base.BaseController;
+import com.api.bussiness.manager.bean.ManagerReqCheckWithdrawal;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@RestController
+public class ManagerCheckWithdrawalController extends BaseController {
+	
+	private static Logger log = LoggerFactory.getLogger(ManagerCheckWithdrawalController.class);
+	
+	@Autowired
+    ManagerCheckWithdrawalService managerCheckWithdrawalService;
+
+	@RequestMapping(value = "/manager/checkWithdrawal")
+	public void checkWithdrawal(HttpServletRequest request,HttpServletResponse response) {
+		response.setHeader("Content-Type", "text/json;charset=UTF-8");
+		try {
+            String msg = (String)request.getAttribute("msg");
+            ManagerReqCheckWithdrawal managerReqCheckWithdrawal = JSON.parseObject(msg, ManagerReqCheckWithdrawal.class);
+			ManagerRspCheckWithdrawal managerRspCheckWithdrawal = managerCheckWithdrawalService.checkWithdrawal(managerReqCheckWithdrawal);
+			writeToJson(response, managerRspCheckWithdrawal);
+		}catch (Exception e) {
+			log.error(e.getMessage());
+			ManagerRspCheckWithdrawal managerRspCheckWithdrawal = new ManagerRspCheckWithdrawal();
+			managerRspCheckWithdrawal.setStatus(ManagerRspCheckWithdrawal.RSP_STATUS_WITHDRAWAL_KEEP);
+			managerRspCheckWithdrawal.setMsg("系统异常");
+			writeToJson(response, managerRspCheckWithdrawal);
+		}
+		
+	}
+
+}

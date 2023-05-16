@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cfgs>
+
+    <!-- 当前模式,0测试，1现网 -->
+    <curMode>0</curMode>
+    
+    <!-- session有效期 ，单位：小时-->
+    <sessionExpire>1</sessionExpire> 
+    <!-- 日志输出控制 -->
+    <showhttpsinfo>true</showhttpsinfo>
+    <showlog>true</showlog>
+    <showcon>true</showcon>
+    <showClient>true</showClient>
+    
+    <!--签名密钥-->
+    <sighkey></sighkey>
+    
+</cfgs>

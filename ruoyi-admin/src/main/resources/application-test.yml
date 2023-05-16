@@ -1,0 +1,101 @@
+# 数据源配置
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid:
+            master:
+                url: jdbc:mysql://localhost:13308/teyueai?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: fred007!
+            # 从库数据源
+            slave:
+                # 从数据源开关/默认关闭
+                enabled: false
+                url:
+                username:
+                password:
+            # 初始连接数
+            initialSize: 2
+            # 最小连接池数量
+            minIdle: 10
+            # 最大连接池数量
+            maxActive: 20
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            # 配置一个连接在池中最大生存的时间，单位是毫秒
+            maxEvictableIdleTimeMillis: 900000
+            # 配置检测连接是否有效
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            webStatFilter:
+                enabled: true
+            statViewServlet:
+                enabled: true
+                # 设置白名单，不填则允许所有访问
+                allow:
+                url-pattern: /monitor/druid/*
+            filter:
+                stat:
+                    enabled: true
+                    # 慢SQL记录
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+# Http接口url地址配置
+reqUrlConfig:
+    #==================================Manager=================================== 120.197.52.117:9085
+    managerCheckPay: http://localhost:9082/sifang/manager/checkPay
+    managerCheckWithdrawal: http://localhost:9082/sifang/manager/checkWithdrawal
+    managerNotifyPay: http://localhost:9082/sifang/manager/notifyPay
+    managerNotifyWithdrawal: http://localhost:9082/sifang/manager/notifyWithdrawal
+    managerCheckBalance: http://localhost:9082/sifang/manager/checkBalance
+    managerFinanceWithdrawal: http://localhost:9082/sifang/manager/financeWithdrawal
+    managerPay: http://localhost:9082/sifang/manager/pay
+    managerWithdrawal: http://localhost:9082/sifang/manager/withdrawal
+    managerSureApply: http://localhost:9082/sifang/manager/sureApply
+
+
+    #==================================Merchant====================================
+    merchantPay: http://localhost:9082/sifang/gateway/payment/payTransReq
+    merchantCheckPay: http://localhost:9082/sifang/gateway/payment/queryTransInfo
+    merchantWithdrawal: http://localhost:9082/sifang/gateway/payment/withdrawal
+    merchantCheckWithdrawal: http://localhost:9082/sifang/gateway/payment/checkwithdrawal
+    merchantSimulateNotifyPay: http://localhost:9082/sifang/merchant/simulateNotifyPay
+    merchantSimulateNotifyWithdrawal: http://localhost:9082/sifang/merchant/simulateNotifyWithdrawal
+
+openai:
+    # 默认的Token长度
+    max_tokens: ${MAX_TOKENS:512}
+    # 尝试将值设为 0.9 以获得更有创意的回复，将值设为 0 以获得具有明确答案的回复
+    temperature: ${TEMPERATURE:0.6}
+    # 默认的AI模型，gpt-3.5-turbo or gpt-3.5-turbo-0301	，区别：https://platform.openai.com/docs/models/gpt-3-5
+    #gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314
+    model: gpt-3.5-turbo
+    #model: gpt-4
+    # 多个Key用,分割
+    keys: ${KEYS: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}
+    # 综合问答API
+    #openai_api: https://api.openai.com/v1/chat/completions
+    openai_api: http://52.77.229.255/v1/chat/completions
+    # 图片问答API
+    #image_api: https://api.openai.com/v1/images/generations
+    image_api: http://52.77.229.255/v1/images/generations
+    # 余额查询的API
+    #credit_api: https://api.openai.com/dashboard/billing/credit_grants
+    credit_api: http://52.77.229.255/dashboard/billing/credit_grants
+    # ${名称:值} 格式以便于在环境变量中配置，默认只需修改值即可
+
+baidu:
+    # 百度统计的API， 取 xxxx 填入即可 hm.src = "https://hm.baidu.com/hm.js?xxxx";
+    tong_ji_token: ${BD_TONG_JI_TOKEN:}

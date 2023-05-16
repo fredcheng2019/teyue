@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('商户提现')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-channelWallet-withdrawal">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">选择渠道：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="channelId" name="channelId">
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">财务钱包信息：</label>
+                <div class="col-sm-8">
+                    <input id="channelWalletInfo" name="channelWalletInfo" class="form-control" type="text" readonly>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">提现金额(元)：</label>
+				<div class="col-sm-8">
+					<input id="accountBalance" name="accountBalance" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">渠道提现银行：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="channelBank" name="channelBank">
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">银行类型：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankId" name="bankId">
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">分行：</label>
+				<div class="col-sm-8">
+					<input id="bankBranch" name="bankBranch" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">支行：</label>
+				<div class="col-sm-8">
+					<input id="bankSubBranch" name="bankSubBranch" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所在省：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankProvince" name="bankProvince" required>
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所在市：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankCity" name="bankCity" required>
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">联行号：</label>
+				<div class="col-sm-8">
+					<input id="bankUnionNo" name="bankUnionNo" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">持卡人：</label>
+				<div class="col-sm-8">
+					<input id="bankAccountOwner" name="bankAccountOwner" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">卡号：</label>
+				<div class="col-sm-8">
+					<input id="bankAccountNo" name="bankAccountNo" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">账户类型：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankAccountType" name="bankAccountType" required>
+						<option value=0>对私</option>
+						<option value=1>对公</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">提款密码：</label>
+				<div class="col-sm-8">
+					<input id="withdrawalPassword" name="withdrawalPassword" class="form-control" type="password" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">谷歌机器验证码：</label>
+				<div class="col-sm-8">
+					<input id="googleCode" name="googleCode" class="form-control" type="text" required>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "financial/financialWallet";
+        var $form = $("#form-channelWallet-withdrawal");
+        var $province = $form.find("select[name='bankProvince']");
+        var $city = $form.find("select[name='bankCity']");
+
+
+        $.validator.addMethod("number",function (value, element, params) {
+            var exp = new RegExp(params);
+            return exp.test(value);
+        },"请输入数字(注意空格)");
+        $.validator.addMethod("regex",function (value, element, params) {
+            var exp = new RegExp(params);
+            return exp.test(value);
+        },"请输入数字(可保留两位小数)");
+        /*表单校验*/
+		$form.validate({
+			rules:{
+                accountBalance:{
+                    regex:"^[0-9]+(.[0-9]{2}|.[0-9]{1})?$"
+				},
+                bankAccountNo: {
+                    number:"^[1-9]\\d*$"
+                }
+			},
+			focusCleanup: true
+		});
+
+
+        /*选择渠道下拉框*/
+        $.post(ctx + "financial/financialWallet/list", {'channelId':''},function (response) {
+            if (response.code == 0) {
+                var data = response.rows;
+                var option = "";
+                for (var i = 0; i < data.length; i++) {
+                    option += "<option value='"+ data[i].channelId +"'>" +data[i].channelName + "</option>"
+                }
+                $form.find("select[name='channelId']").html("").append(option);
+                // 初始化渠道钱包信息
+                var channelId = data[0].channelId;
+                initChannelWalletInfo(channelId);
+                // 初始化渠道提现银行下拉框
+                initChannelBank(channelId);
+			}else {
+                $.modal.alertError("初始化信息异常");
+			}
+        });
+        /* 渠道下拉框选择事件   更新渠道钱包信息 */
+        $form.find("select[name='channelId']").change(function () {
+            var channelId = $form.find("select[name='channelId']").val();
+            // 更新渠道钱包信息
+            initChannelWalletInfo(channelId);
+            // 更新渠道提现银行下拉框
+            initChannelBank(channelId);
+        });
+
+
+
+        /* 渠道钱包信息 */
+        function initChannelWalletInfo(channelId) {
+            $.post(ctx + "financial/financialWallet/list", {'channelId':channelId},function (response) {
+                if (response.code == 0) {
+                    var data = response.rows;
+                    var accountBalance = new Decimal(data[0].accountBalance).div(new Decimal(100)).toFixed(2);
+                    var frozenBalance = new Decimal(data[0].frozenBalance).div(new Decimal(100)).toFixed(2);
+                    var message = "总金额额：" + accountBalance+"元" + "    冻结金额：" + frozenBalance +"元";
+                    $form.find("input[name='channelWalletInfo']").val(message);
+				}else {
+                    $.modal.alertError("初始化信息异常");
+				}
+            });
+        }
+
+
+
+
+
+        /* 渠道提现银行下拉框 */
+        function initChannelBank(channelId) {
+            $.post(ctx + "channel/channelWithdrawalBank/list", {'channelId':channelId},function (response) {
+                if (response.code == 0) {
+                    var data = response.rows;
+                    var option = "<option value=''>" + "--------" + "</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        option += "<option value='"+ data[i].bankId +"'>" +data[i].bankName + "</option>"
+                    }
+                    $form.find("select[name='channelBank']").html("").append(option);
+                }
+            });
+        }
+        /* 渠道下拉框选择事件   更新银行类型下拉框 */
+        $form.find("select[name='channelBank']").change(function () {
+            var bankId = $form.find("select[name='channelBank']").val();
+            if (bankId) {
+                // 银行类型  不可选
+                $form.find("select[name='bankId']").val(bankId).prop('selected',true);
+                $form.find("select[name='bankId']").val(bankId).prop('disabled',true);
+			}else {
+                // 银行可选
+                $form.find("select[name='bankId']").prop('disabled',false);
+			}
+		});
+
+
+        /*初始化省市县*/
+        /*初始化-省*/
+        $.post(ctx + "basedata/areas/list",{'levelType':1,'parentId':100000},function (response) {
+            var data = response.rows;
+            var option = "<option value=''>" + "请选择" + "</option>";
+            for (var i = 0; i < data.length; i++){
+                option += "<option value='" + data[i].province + "'>" + data[i].province + "</option>"
+            }
+            $province.html("").append(option);
+        });
+        /*省下拉框-选择事件*/
+        var str="<option value=''>" + "请选择" + "</option>";
+        $province.change(function () {
+            $city.html(str);
+            if ($province.val())
+                getCityOrCounty(2, $province.val(), $city, $city.val());
+        });
+
+        /*根据省查询市*/
+        function getCityOrCounty(LevelType,province,htm,address) {
+            $.post(ctx + "basedata/areas/parentId", {'levelType':LevelType,'province':province}, function (response) {
+                var data = response.rows;
+                var option = "<option value=''>" +"请选择"+ "</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].city == address) {
+                        option += "<option value='" + data[i].city + "' selected='selected'>" + data[i].city + "</option>"
+                    }else {
+                        option += "<option value='" + data[i].city + "'>" + data[i].city + "</option>"
+                    }
+                }
+                htm.html("").append(option);
+            });
+        }
+
+
+        /*银行类型下拉框*/
+        $.post(ctx + "basedata/bank/list", {'name':''},function (response) {
+            var data = response.rows;
+            var option = "<option value=''>" + "请选择" + "</option>";
+            for (var i = 0; i < data.length; i++) {
+                option += "<option value='"+ data[i].id +"'>" + data[i].name + "</option>"
+            }
+            $form.find("select[name='bankId']").html("").append(option);
+        });
+
+
+
+        /*提交表单*/
+        function submitHandler() {
+            if ($.validate.form()) {
+                // 银行可选
+                $form.find("select[name='bankId']").prop('disabled',false);
+                var data = $form.serializeArray();
+                // 转化成 (分)
+                data[2].value = new Decimal(data[2].value).mul(new Decimal(100));
+                $.operate.save(prefix + "/withdrawalPay", data);
+            }
+        }
+
+	</script>
+</body>
+</html>

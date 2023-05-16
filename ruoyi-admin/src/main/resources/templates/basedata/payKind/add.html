@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-payKind-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">支付类型名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">编码：</label>
+				<div class="col-sm-8">
+					<input id="code" name="code" class="form-control" type="text" required>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "basedata/paykind";
+		$("#form-payKind-add").validate({
+			rules:{
+				name:{
+					required:true,
+					remote: {
+						url:prefix + "/checkPaykindUnique",
+						type: "post",
+						dataType: "json",
+						data: {
+							"name":function () {
+								return $.common.trim($("#name").val());
+							}
+						},
+						dataFilter: function(data, type) {
+							return $.validate.unique(data);
+						}
+					}
+				},
+				code:{
+					required:true
+				}
+			},
+			messages: {
+				"name": {
+					remote: "支付类型已经存在"
+				}
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+				var data = $("#form-payKind-add").serializeArray();
+				$.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>

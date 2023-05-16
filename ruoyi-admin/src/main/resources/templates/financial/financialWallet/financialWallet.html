@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('列表')" />
+</head>
+<body class="gray-bg">
+
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								渠道名称：<input type="text" name="channelName"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="platformWithdrawal()" shiro:hasPermission="merchant:mpMerchantWallet:withdrawal">
+					<i class="fa fa-plus"></i> 提现
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="financial:financialWallet:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('financial:financialWallet:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('financial:financialWallet:remove')}]];
+        var prefix = ctx + "financial/financialWallet";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id',
+					title : '标识',
+					visible: false
+				},
+				{
+					field : 'channelId',
+					title : '渠道标识',
+					sortable: true,
+                    visible: false
+				},
+                {
+                    field : 'channelName',
+                    title : '渠道名称'
+                },
+				{
+					field : 'accountBalance',
+					title : '总余额(元)',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        var data = new Decimal(value).div(new Decimal(100)).toFixed(2);
+                        return data;
+                    }
+				},
+				{
+					field : 'frozenBalance',
+					title : '冻结金额(元)',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        var data = new Decimal(value).div(new Decimal(100)).toFixed(2);
+                        return data;
+                    }
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+		// 提现
+        function platformWithdrawal() {
+			var  url = prefix + "/withdrawal";
+			$.modal.open("提现", url);
+        }
+    </script>
+</body>
+</html>

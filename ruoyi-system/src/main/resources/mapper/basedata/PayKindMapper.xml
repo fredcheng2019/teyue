@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.basedata.mapper.PayKindMapper">
+    
+    <resultMap type="PayKind" id="PayKindResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+    </resultMap>
+	
+	<sql id="selectPayKindVo">
+        select id, name, code from mp_pay_kind
+    </sql>
+	
+    <select id="selectPayKindList" parameterType="PayKind" resultMap="PayKindResult">
+        <include refid="selectPayKindVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != '' "> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != '' "> and code like concat('%', #{code}, '%')</if>
+         </where>
+    </select>
+    
+    <select id="selectPayKindById" parameterType="Long" resultMap="PayKindResult">
+        <include refid="selectPayKindVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPayKind" parameterType="PayKind" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_pay_kind
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePayKind" parameterType="PayKind">
+        update mp_pay_kind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePayKindById" parameterType="Integer">
+        delete from mp_pay_kind where id = #{id}
+    </delete>
+	
+    <delete id="deletePayKindByIds" parameterType="String">
+        delete from mp_pay_kind where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="checkPaykindUnique" parameterType="String" resultMap="PayKindResult">
+        select id, name, code FROM mp_pay_kind WHERE name=#{name}
+	</select>
+
+
+    <select id="selectPayKindListByIds" resultMap="PayKindResult">
+        SELECT id, NAME, CODE FROM mp_pay_kind WHERE
+        id  IN
+        <foreach item="id" index="j" collection="payIds" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+	</select>
+
+
+</mapper>

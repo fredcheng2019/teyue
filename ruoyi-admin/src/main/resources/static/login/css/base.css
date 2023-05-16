@@ -1,0 +1,282 @@
+html,body{
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 62.5%;
+    font-family: 'Microsoft YaHei';
+}
+ul,li{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+body{
+    background: url('../img/bg.png') no-repeat;
+    background-size: 100% 100%;
+}
+.t_container{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.t_header{
+    width: 100%;
+    height: 6.667rem;
+    background: #14395f;
+    line-height: 0.72rem;
+    position: relative;
+    z-index: 5;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 6.667rem;
+    padding-left: 2rem;
+}
+.t_header img{
+    width: 20.2rem;
+    height: 3.5rem;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    padding-left: 2rem;
+}
+.t_main ul{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 36rem;
+    height: 34.4rem;
+    background: #02264a;
+    border-radius: 0.5rem;
+    right: 16rem;
+    text-align: center;
+    z-index: 10;
+}
+.t_main ul li{
+    padding: 2rem 0;
+    width: 36rem;
+    height: 2.334rem;
+}
+.t_main ul li input{
+    width: 28rem;
+    height: 3rem;
+    border-radius: 0.2rem;
+    background: #fff;
+    outline: none;
+    border: 2px solid transparent;
+    font-size: 2rem;
+    padding-left: 0.8rem;
+}
+
+.t_btn{
+    width: 28rem;
+    height: 3.4rem;
+    border-radius: 0.2rem;
+    background: #fca441;
+    border: 0px;
+    color: #fff;
+    font-size: 1.8rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.t_main ul li input:focus{
+    outline:none;
+    border: 2px solid #3587F8;
+    border-radius: 0.2rem;
+    box-shadow: 0 0 10px #3587F8;
+    color: #333;
+}
+.t_main ul li input::-webkit-input-placeholder{
+    color: #999;
+    font-size: 1.6rem;
+    font-family: 'Microsoft YaHei';
+}
+.t_main ul li input:-moz-placeholder {
+    color: #999;
+    font-size: 1.6rem;
+    font-family: 'Microsoft YaHei';
+}
+.t_main ul li input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+    font-size: 1.6rem;
+    font-family: 'Microsoft YaHei';
+}
+.t_main ul li input:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+    font-size: 1.6rem;
+    font-family: 'Microsoft YaHei';
+}
+.t_main .t_titles{
+    font-size: 3.6rem;
+    padding: 2rem 0 2rem 3.5rem;
+    color: #fff;
+    text-align: left;
+}
+.t_main .t_checkbox{
+    padding: 0;
+    margin: 0;
+    height: 2.2rem;
+    text-align: left;
+    padding-left: 3.6rem;
+    position: relative;
+    line-height: 2.2rem;
+}
+.t_checkbox span{
+    padding-left: 2.4rem;
+    font-size: 1.6rem;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+}
+.t_checkbox i{
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    background: url(../img/unchekbox.png) no-repeat;
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.t_jr{
+    width: 28.646%;
+    position: absolute;
+    top: 48%;
+    left: 25%;
+}
+.t_wl{
+    width: 40%;
+    position: absolute;
+    left: 13%;
+    top: 37%;
+}
+select{
+    width: 29.2rem;
+    height: 3.6rem;
+    border-radius: 0.2rem;
+    background: #fff;
+    outline: none;
+    border: 2px solid transparent;
+    font-size: 1.65rem;
+    padding-left: 0.4rem;
+    color: #333;
+}
+.t_main_logo{
+    position: absolute;
+    right: 0;
+    top: 0px;
+    z-index: 20;
+    cursor: pointer;
+}
+.t_status div{
+   display: inline-block;
+   width: 49.5%;
+   text-align: center;
+   font-size: 2rem;
+   color: #fff;
+   cursor: pointer;
+   position: relative;
+   z-index: 51;
+}
+.t_status i{
+    position: absolute;
+    display: inline-block;
+    width: 46px;
+    height: 3px;
+    background: #fca441;
+    bottom: -1px;
+    left: 5.4rem;
+}
+.t_opacity{
+    position: absolute;
+    display: inline-block;
+    width: 15rem;
+    height: 6rem;
+    z-index: 50;
+    opacity: 0;
+    transform: rotate(45deg);
+    right: -1rem;
+    top: 4rem;
+}
+.t_administrator{
+    opacity: 0.4;
+}
+.t_main .t_status{
+    padding-bottom: 0.5rem;
+    width: 82%;
+    border-bottom: 1px solid #6D849B;
+    margin: 0 auto;
+    position: relative;
+}
+@media screen and (max-height: 720px) {
+    .t_main ul {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 32rem;
+        height: 23.4rem;
+        background: #14395f;
+        border-radius: 0.5rem;
+        right: 10rem;
+        text-align: center;
+        z-index: 10;
+    }
+    .t_main ul li {
+        padding: 2rem 0;
+        width: 32rem;
+        height: 2.334rem;
+    }
+    .t_status i{
+        position: absolute;
+        display: inline-block;
+        width: 46px;
+        height: 3px;
+        background: #fca441;
+        bottom: -1px;
+        left: 4.6rem;
+    }
+    .t_main ul li input {
+        width: 24rem;
+        height: 3rem;
+        border-radius: 0.2rem;
+        background: #fff;
+        outline: none;
+        border: 2px solid transparent;
+        font-size: 2rem;
+        padding-left: 0.8rem;
+    }
+    .t_status div {
+        display: inline-block;
+        width: 49.4%;
+        text-align: center;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+    }
+    .t_main .t_titles {
+        font-size: 3rem;
+        padding: 2rem 0 2rem 3.5rem;
+    }
+    .t_btn {
+        width: 25rem;
+        height: 3.4rem;
+        border-radius: 0.2rem;
+        background: #fca441;
+        border: 0px;
+        color: #fff;
+        font-size: 1.8rem;
+        margin-top: -1rem;
+        cursor: pointer;
+    }
+    .t_container{
+        min-width: 1100px;
+    }
+    select{
+        width: 25.2rem;
+    }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-merchantIp-edit" th:object="${merchantIp}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<input id="merchantId" name="merchantId" th:field="*{merchantId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">ip：</label>
+				<div class="col-sm-8">
+					<input id="ip" name="ip" th:field="*{ip}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "merchant/merchantIp";
+		$("#form-merchantIp-edit").validate({
+			rules:{
+                ip:{
+                    remote:{
+                        url:prefix + "/checkMerchantIpUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            "id":function () {
+                                return $("input[name='id']").val();
+                            },
+                            "merchantId":function () {
+                                return $.common.trim($("#merchantId").val());
+                            },
+                            "ip":function () {
+                                return $.common.trim($("#ip").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return $.validate.unique(data);
+                        }
+                    }
+                }
+			},
+            messages: {
+                "ip": {
+                    remote: "该商户已添加该IP地址"
+                }
+            },
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-merchantIp-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

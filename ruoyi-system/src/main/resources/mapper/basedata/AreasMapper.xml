@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.basedata.mapper.AreasMapper">
+    
+    <resultMap type="Areas" id="AreasResult">
+        <result property="iD"    column="ID"    />
+        <result property="parentId"    column="ParentId"    />
+        <result property="levelType"    column="LevelType"    />
+        <result property="name"    column="Name"    />
+        <result property="shortName"    column="ShortName"    />
+        <result property="parentPath"    column="ParentPath"    />
+        <result property="province"    column="Province"    />
+        <result property="city"    column="City"    />
+        <result property="district"    column="District"    />
+        <result property="provinceShortName"    column="ProvinceShortName"    />
+        <result property="cityShortName"    column="CityShortName"    />
+        <result property="districtShortName"    column="DistrictShortName"    />
+        <result property="provincePinyin"    column="ProvincePinyin"    />
+        <result property="cityPinyin"    column="CityPinyin"    />
+        <result property="districtPinyin"    column="DistrictPinyin"    />
+        <result property="cityCode"    column="CityCode"    />
+        <result property="zipCode"    column="ZipCode"    />
+        <result property="pinyin"    column="Pinyin"    />
+        <result property="jianpin"    column="Jianpin"    />
+        <result property="firstChar"    column="FirstChar"    />
+        <result property="lng"    column="lng"    />
+        <result property="lat"    column="Lat"    />
+        <result property="remark1"    column="Remark1"    />
+        <result property="remark2"    column="Remark2"    />
+    </resultMap>
+	
+	<sql id="selectAreasVo">
+        select ID, ParentId, LevelType, Name, ShortName, ParentPath, Province, City, District, ProvinceShortName, CityShortName, DistrictShortName, ProvincePinyin, CityPinyin, DistrictPinyin, CityCode, ZipCode, Pinyin, Jianpin, FirstChar, lng, Lat, Remark1, Remark2 from areas
+    </sql>
+	
+    <select id="selectAreasList" parameterType="Areas" resultMap="AreasResult">
+        <include refid="selectAreasVo"/>
+        <where>  
+            <if test="iD != null  and iD != '' "> and ID = #{iD}</if>
+             <if test="parentId != null  and parentId != '' "> and ParentId = #{parentId}</if>
+             <if test="levelType != null  and levelType != '' "> and LevelType = #{levelType}</if>
+             <if test="name != null  and name != '' "> and Name = #{name}</if>
+             <if test="shortName != null  and shortName != '' "> and ShortName = #{shortName}</if>
+             <if test="parentPath != null  and parentPath != '' "> and ParentPath = #{parentPath}</if>
+             <if test="province != null  and province != '' "> and Province = #{province}</if>
+             <if test="city != null  and city != '' "> and City = #{city}</if>
+             <if test="district != null  and district != '' "> and District = #{district}</if>
+             <if test="provinceShortName != null  and provinceShortName != '' "> and ProvinceShortName = #{provinceShortName}</if>
+             <if test="cityShortName != null  and cityShortName != '' "> and CityShortName = #{cityShortName}</if>
+             <if test="districtShortName != null  and districtShortName != '' "> and DistrictShortName = #{districtShortName}</if>
+             <if test="provincePinyin != null  and provincePinyin != '' "> and ProvincePinyin = #{provincePinyin}</if>
+             <if test="cityPinyin != null  and cityPinyin != '' "> and CityPinyin = #{cityPinyin}</if>
+             <if test="districtPinyin != null  and districtPinyin != '' "> and DistrictPinyin = #{districtPinyin}</if>
+             <if test="cityCode != null  and cityCode != '' "> and CityCode = #{cityCode}</if>
+             <if test="zipCode != null  and zipCode != '' "> and ZipCode = #{zipCode}</if>
+             <if test="pinyin != null  and pinyin != '' "> and Pinyin = #{pinyin}</if>
+             <if test="jianpin != null  and jianpin != '' "> and Jianpin = #{jianpin}</if>
+             <if test="firstChar != null  and firstChar != '' "> and FirstChar = #{firstChar}</if>
+             <if test="lng != null  and lng != '' "> and lng = #{lng}</if>
+             <if test="lat != null  and lat != '' "> and Lat = #{lat}</if>
+             <if test="remark1 != null  and remark1 != '' "> and Remark1 = #{remark1}</if>
+             <if test="remark2 != null  and remark2 != '' "> and Remark2 = #{remark2}</if>
+         </where>
+    </select>
+    
+    <select id="selectAreasById" parameterType="String" resultMap="AreasResult">
+        <include refid="selectAreasVo"/>
+        where ID = #{iD}
+    </select>
+        
+    <insert id="insertAreas" parameterType="Areas">
+        insert into areas
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="iD != null  and iD != ''  ">ID,</if>
+			<if test="parentId != null  and parentId != ''  ">ParentId,</if>
+			<if test="levelType != null  and levelType != ''  ">LevelType,</if>
+			<if test="name != null  and name != ''  ">Name,</if>
+			<if test="shortName != null  and shortName != ''  ">ShortName,</if>
+			<if test="parentPath != null  and parentPath != ''  ">ParentPath,</if>
+			<if test="province != null  and province != ''  ">Province,</if>
+			<if test="city != null  and city != ''  ">City,</if>
+			<if test="district != null  and district != ''  ">District,</if>
+			<if test="provinceShortName != null  and provinceShortName != ''  ">ProvinceShortName,</if>
+			<if test="cityShortName != null  and cityShortName != ''  ">CityShortName,</if>
+			<if test="districtShortName != null  and districtShortName != ''  ">DistrictShortName,</if>
+			<if test="provincePinyin != null  and provincePinyin != ''  ">ProvincePinyin,</if>
+			<if test="cityPinyin != null  and cityPinyin != ''  ">CityPinyin,</if>
+			<if test="districtPinyin != null  and districtPinyin != ''  ">DistrictPinyin,</if>
+			<if test="cityCode != null  and cityCode != ''  ">CityCode,</if>
+			<if test="zipCode != null  and zipCode != ''  ">ZipCode,</if>
+			<if test="pinyin != null  and pinyin != ''  ">Pinyin,</if>
+			<if test="jianpin != null  and jianpin != ''  ">Jianpin,</if>
+			<if test="firstChar != null  and firstChar != ''  ">FirstChar,</if>
+			<if test="lng != null  and lng != ''  ">lng,</if>
+			<if test="lat != null  and lat != ''  ">Lat,</if>
+			<if test="remark1 != null  and remark1 != ''  ">Remark1,</if>
+			<if test="remark2 != null  and remark2 != ''  ">Remark2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="iD != null  and iD != ''  ">#{iD},</if>
+			<if test="parentId != null  and parentId != ''  ">#{parentId},</if>
+			<if test="levelType != null  and levelType != ''  ">#{levelType},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="parentPath != null  and parentPath != ''  ">#{parentPath},</if>
+			<if test="province != null  and province != ''  ">#{province},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="district != null  and district != ''  ">#{district},</if>
+			<if test="provinceShortName != null  and provinceShortName != ''  ">#{provinceShortName},</if>
+			<if test="cityShortName != null  and cityShortName != ''  ">#{cityShortName},</if>
+			<if test="districtShortName != null  and districtShortName != ''  ">#{districtShortName},</if>
+			<if test="provincePinyin != null  and provincePinyin != ''  ">#{provincePinyin},</if>
+			<if test="cityPinyin != null  and cityPinyin != ''  ">#{cityPinyin},</if>
+			<if test="districtPinyin != null  and districtPinyin != ''  ">#{districtPinyin},</if>
+			<if test="cityCode != null  and cityCode != ''  ">#{cityCode},</if>
+			<if test="zipCode != null  and zipCode != ''  ">#{zipCode},</if>
+			<if test="pinyin != null  and pinyin != ''  ">#{pinyin},</if>
+			<if test="jianpin != null  and jianpin != ''  ">#{jianpin},</if>
+			<if test="firstChar != null  and firstChar != ''  ">#{firstChar},</if>
+			<if test="lng != null  and lng != ''  ">#{lng},</if>
+			<if test="lat != null  and lat != ''  ">#{lat},</if>
+			<if test="remark1 != null  and remark1 != ''  ">#{remark1},</if>
+			<if test="remark2 != null  and remark2 != ''  ">#{remark2},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateAreas" parameterType="Areas">
+        update areas
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  and parentId != ''  ">ParentId = #{parentId},</if>
+            <if test="levelType != null  and levelType != ''  ">LevelType = #{levelType},</if>
+            <if test="name != null  and name != ''  ">Name = #{name},</if>
+            <if test="shortName != null  and shortName != ''  ">ShortName = #{shortName},</if>
+            <if test="parentPath != null  and parentPath != ''  ">ParentPath = #{parentPath},</if>
+            <if test="province != null  and province != ''  ">Province = #{province},</if>
+            <if test="city != null  and city != ''  ">City = #{city},</if>
+            <if test="district != null  and district != ''  ">District = #{district},</if>
+            <if test="provinceShortName != null  and provinceShortName != ''  ">ProvinceShortName = #{provinceShortName},</if>
+            <if test="cityShortName != null  and cityShortName != ''  ">CityShortName = #{cityShortName},</if>
+            <if test="districtShortName != null  and districtShortName != ''  ">DistrictShortName = #{districtShortName},</if>
+            <if test="provincePinyin != null  and provincePinyin != ''  ">ProvincePinyin = #{provincePinyin},</if>
+            <if test="cityPinyin != null  and cityPinyin != ''  ">CityPinyin = #{cityPinyin},</if>
+            <if test="districtPinyin != null  and districtPinyin != ''  ">DistrictPinyin = #{districtPinyin},</if>
+            <if test="cityCode != null  and cityCode != ''  ">CityCode = #{cityCode},</if>
+            <if test="zipCode != null  and zipCode != ''  ">ZipCode = #{zipCode},</if>
+            <if test="pinyin != null  and pinyin != ''  ">Pinyin = #{pinyin},</if>
+            <if test="jianpin != null  and jianpin != ''  ">Jianpin = #{jianpin},</if>
+            <if test="firstChar != null  and firstChar != ''  ">FirstChar = #{firstChar},</if>
+            <if test="lng != null  and lng != ''  ">lng = #{lng},</if>
+            <if test="lat != null  and lat != ''  ">Lat = #{lat},</if>
+            <if test="remark1 != null  and remark1 != ''  ">Remark1 = #{remark1},</if>
+            <if test="remark2 != null  and remark2 != ''  ">Remark2 = #{remark2},</if>
+        </trim>
+        where ID = #{iD}
+    </update>
+
+	<delete id="deleteAreasById" parameterType="String">
+        delete from areas where ID = #{iD}
+    </delete>
+	
+    <delete id="deleteAreasByIds" parameterType="String">
+        delete from areas where ID in 
+        <foreach item="iD" collection="array" open="(" separator="," close=")">
+            #{iD}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchantAccount.mapper.MerchantAccountBankMapper">
+    
+    <resultMap type="MerchantAccountBank" id="MerchantAccountBankResult">
+        <result property="id"    column="id"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="bankBranch"    column="bank_branch"    />
+        <result property="bankSubBranch"    column="bank_sub_branch"    />
+        <result property="bankProvince"    column="bank_province"    />
+        <result property="bankCity"    column="bank_city"    />
+        <result property="bankUnionNo"    column="bank_union_no"    />
+        <result property="bankAccountOwner"    column="bank_account_owner"    />
+        <result property="bankAccountNo"    column="bank_account_no"    />
+        <result property="bankAccountType"    column="bank_account_type"    />
+    </resultMap>
+
+    <resultMap id="MerchantAccountBankRspResult" type="com.ruoyi.merchantAccount.domain.MerchantAccountBankRSP" extends="MerchantAccountBankResult" autoMapping="true">
+    </resultMap>
+
+	<sql id="selectMerchantBankVo">
+        select id, merchant_id, bank_id, bank_branch, bank_sub_branch, bank_province, bank_city, bank_union_no, bank_account_owner, bank_account_no, bank_account_type from mp_merchant_bank
+    </sql>
+	
+    <select id="selectMerchantBankList" parameterType="MerchantAccountBank" resultMap="MerchantAccountBankRspResult">
+        SELECT
+        mmb.id, mmb.bank_id, mmb.bank_branch, mmb.bank_sub_branch, mmb.bank_province, mmb.bank_city, mmb.bank_union_no, mmb.bank_account_owner, mmb.bank_account_no, mmb.bank_account_type,
+        mb.name AS bankName
+        FROM
+        `mp_merchant_bank` mmb
+        LEFT JOIN `mp_merchant` mm
+        ON mmb.merchant_id = mm.id
+        LEFT JOIN `mp_bank` mb
+        ON
+        mmb.bank_id = mb.id
+        <where>  
+            <if test="id != null "> and mmb.id = #{id}</if>
+             <if test="merchantId != null "> and mmb.merchant_id = #{merchantId}</if>
+             <if test="bankId != null "> and mmb.bank_id = #{bankId}</if>
+             <if test="bankBranch != null  and bankBranch != '' "> and mmb.bank_branch like concat('%', #{bankBranch}, '%')</if>
+             <if test="bankSubBranch != null  and bankSubBranch != '' "> and mmb.bank_sub_branch like concat('%', #{bankSubBranch}, '%')</if>
+             <if test="bankProvince != null  and bankProvince != '' "> and mmb.bank_province like "%"#{bankProvince}"%"</if>
+             <if test="bankCity != null  and bankCity != '' "> and mmb.bank_city like concat('%', #{bankCity}, '%')</if>
+             <if test="bankUnionNo != null  and bankUnionNo != '' "> and mmb.bank_union_no = #{bankUnionNo}</if>
+             <if test="bankAccountOwner != null  and bankAccountOwner != '' "> and mmb.bank_account_owner like concat('%', #{bankAccountOwner}, '%')</if>
+             <if test="bankAccountNo != null  and bankAccountNo != '' "> and mmb.bank_account_no = #{bankAccountNo}</if>
+             <if test="bankAccountType != null "> and mmb.bank_account_type = #{bankAccountType}</if>
+         </where>
+    </select>
+    
+    <select id="selectMerchantBankById" parameterType="Long" resultMap="MerchantAccountBankResult">
+        <include refid="selectMerchantBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMerchantBank" parameterType="MerchantAccountBank" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_merchant_bank
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="merchantId != null  ">merchant_id,</if>
+			<if test="bankId != null  ">bank_id,</if>
+			<if test="bankBranch != null  and bankBranch != ''  ">bank_branch,</if>
+			<if test="bankSubBranch != null  and bankSubBranch != ''  ">bank_sub_branch,</if>
+			<if test="bankProvince != null  and bankProvince != ''  ">bank_province,</if>
+			<if test="bankCity != null  and bankCity != ''  ">bank_city,</if>
+			<if test="bankUnionNo != null  and bankUnionNo != ''  ">bank_union_no,</if>
+			<if test="bankAccountOwner != null  and bankAccountOwner != ''  ">bank_account_owner,</if>
+			<if test="bankAccountNo != null  and bankAccountNo != ''  ">bank_account_no,</if>
+			<if test="bankAccountType != null  ">bank_account_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="merchantId != null  ">#{merchantId},</if>
+			<if test="bankId != null  ">#{bankId},</if>
+			<if test="bankBranch != null  and bankBranch != ''  ">#{bankBranch},</if>
+			<if test="bankSubBranch != null  and bankSubBranch != ''  ">#{bankSubBranch},</if>
+			<if test="bankProvince != null  and bankProvince != ''  ">#{bankProvince},</if>
+			<if test="bankCity != null  and bankCity != ''  ">#{bankCity},</if>
+			<if test="bankUnionNo != null  and bankUnionNo != ''  ">#{bankUnionNo},</if>
+			<if test="bankAccountOwner != null  and bankAccountOwner != ''  ">#{bankAccountOwner},</if>
+			<if test="bankAccountNo != null  and bankAccountNo != ''  ">#{bankAccountNo},</if>
+			<if test="bankAccountType != null  ">#{bankAccountType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMerchantBank" parameterType="MerchantAccountBank">
+        update mp_merchant_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="merchantId != null  ">merchant_id = #{merchantId},</if>
+            <if test="bankId != null  ">bank_id = #{bankId},</if>
+            <if test="bankBranch != null  and bankBranch != ''  ">bank_branch = #{bankBranch},</if>
+            <if test="bankSubBranch != null  and bankSubBranch != ''  ">bank_sub_branch = #{bankSubBranch},</if>
+            <if test="bankProvince != null  and bankProvince != ''  ">bank_province = #{bankProvince},</if>
+            <if test="bankCity != null  and bankCity != ''  ">bank_city = #{bankCity},</if>
+            <if test="bankUnionNo != null  and bankUnionNo != ''  ">bank_union_no = #{bankUnionNo},</if>
+            <if test="bankAccountOwner != null  and bankAccountOwner != ''  ">bank_account_owner = #{bankAccountOwner},</if>
+            <if test="bankAccountNo != null  and bankAccountNo != ''  ">bank_account_no = #{bankAccountNo},</if>
+            <if test="bankAccountType != null  ">bank_account_type = #{bankAccountType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMerchantBankById" parameterType="Long">
+        delete from mp_merchant_bank where id = #{id}
+    </delete>
+	
+    <delete id="deleteMerchantBankByIds" parameterType="String">
+        delete from mp_merchant_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <select id="selectMerchantBankListByMerchantId" resultMap="MerchantAccountBankResult">
+        select id, merchant_id, bank_id, bank_branch, bank_sub_branch, bank_province, bank_city, bank_union_no, bank_account_owner, bank_account_no, bank_account_type from mp_merchant_bank
+        where
+        merchant_id = #{mpMerchantId}
+    </select>
+</mapper>

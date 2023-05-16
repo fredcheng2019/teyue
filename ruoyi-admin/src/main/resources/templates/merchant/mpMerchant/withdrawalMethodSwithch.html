@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+  <th:block th:include="include :: header('开关')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+  <form class="form-horizontal m" id="form-MerchantWithdrawal-status">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">选择渠道：</label>
+      <div class="col-sm-8">
+        <input type="hidden" id="id" name="id" th:value="${id}">
+        <input type="hidden" id="channelId" name="channelId" th:value="${dfChannelId}">
+        <select class="form-control" id="dfChannelId" name="dfChannelId">
+          <option value="" selected>----请选择----</option>
+        </select>
+      </div>
+    </div>
+
+    </div>
+  </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+  var prefix = ctx + "merchant/merchantInfo";
+  var $form = $("#form-MerchantWithdrawal-status");
+
+  var channelId = $("#channelId").val();
+
+
+  /*选择渠道下拉框*/
+  $.post(ctx+"channel/channelInfo/list", {},function (response) {
+    if (response.code == 0) {
+      var data = response.rows;
+      var option = "<option value='-1'>" + "全部" + "</option>";
+      for (var i = 0; i < data.length; i++) {
+
+        if (channelId!=null && channelId != '' && channelId == data[i].id){
+          option += "<option value='"+ data[i].id +"' selected >" +data[i].name + "</option>"
+        } else {
+            option += "<option value='"+ data[i].id +"' >" +data[i].name + "</option>"
+        }
+      }
+      $form.find("select[name='dfChannelId']").html("").append(option);
+
+    }else {
+      $.modal.alertError("初始化信息异常");
+    }
+  });
+
+
+
+
+
+  function submitHandler() {
+    if ($.validate.form()) {
+      var data = $form.serializeArray();
+      $.operate.save(prefix + "/withdrawalSwitchSetting", data);
+    }
+  }
+
+</script>
+</body>
+</html>

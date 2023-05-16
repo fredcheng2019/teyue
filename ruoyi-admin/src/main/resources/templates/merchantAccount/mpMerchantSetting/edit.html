@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-mpFinancialSetting-edit" th:object="${merchantSetting}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商户编码：</label>
+				<div class="col-sm-8">
+					<input id="code" name="code" th:field="*{code}" class="form-control" type="text" readonly>
+					<!--<a onclick="resetMerchantCode()" href="javascript:void(0);" class="btn btn-info btn-xs" style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商户秘钥：</label>
+				<div class="col-sm-8">
+					<input id="secretKey" name="secretKey" th:field="*{secretKey}" class="form-control" type="text" readonly>
+					<a onclick="resetMerchantSecretKey()" href="javascript:void(0);" class="btn btn-info btn-xs" style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">谷歌校验密钥：</label>
+				<div class="col-sm-8">
+					<input id="googleSecret" name="googleSecret" class="form-control" type="text" readonly>
+					<a onclick="resetMerchantGoogleSecret()" href="javascript:void(0);" class="btn btn-info btn-xs" style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">提款密码：</label>
+				<div class="col-sm-8">
+					<input id="withdrawalPassword" name="withdrawalPassword" th:field="*{withdrawalPassword}" class="form-control" type="password" >
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:inline="javascript">
+		var merchantSetting = [[${merchantSetting}]];
+		var $form = $("#form-mpFinancialSetting-edit");
+		// 谷歌秘钥回显
+        $form.find("input[name='googleSecret']").val(merchantSetting.googleSecret);
+
+		var prefix = ctx + "merchantAccount/setting";
+        var getCodeUrl = ctx + "merchant/merchantInfo";
+
+		$("#form-mpFinancialSetting-edit").validate({
+			rules:{
+				withdrawalPassword:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+
+        /**
+         * 商户编码重置
+         */
+        function resetMerchantCode() {
+            $.post(getCodeUrl + "/resetMerchantNo",{},function (response) {
+                var newCode = response;
+                $form.find("input[name='code']").val(newCode);
+            });
+        }
+
+
+        /**
+         * 商户秘钥重置
+         */
+        function resetMerchantSecretKey() {
+            $.post(getCodeUrl + "/resetCode/my",{},function (response) {
+                var newCode = response;
+                $form.find("input[name='secretKey']").val(newCode);
+            });
+        }
+
+
+        /**
+         * 谷歌校验密钥重置
+         */
+        function resetMerchantGoogleSecret() {
+            $.post(getCodeUrl + "/resetCode/gg",{},function (response) {
+                var newCode = response;
+                $form.find("input[name='googleSecret']").val(newCode);
+            });
+        }
+
+
+
+
+        function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-mpFinancialSetting-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

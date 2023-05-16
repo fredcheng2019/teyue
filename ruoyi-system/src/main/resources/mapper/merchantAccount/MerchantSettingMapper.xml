@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchantAccount.mapper.MerchantSettingMapper">
+
+    <resultMap id="MerchantSettingResult" type="MerchantSetting">
+        <result column="id" property="id"/>
+        <result column="withdrawal_password" property="withdrawalPassword"/>
+        <result column="google_secret" property="googleSecret"/>
+        <result column="code" property="code"/>
+        <result column="secret_key" property="secretKey"/>
+    </resultMap>
+	<sql id="selectMpMerchantVo">
+        select id,name,code,withdrawal_password,google_secret,secret_key from mp_merchant
+    </sql>
+	
+    <select id="selectMpMerchantList" parameterType="MerchantSetting" resultMap="MerchantSettingResult">
+        <include refid="selectMpMerchantVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''  ">and name like "%"#{name}"%"</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != '' "> and withdrawal_password = #{withdrawalPassword}</if>
+            <if test="googleSecret != null  and googleSecret != '' "> and google_secret = #{googleSecret}</if>
+         </where>
+    </select>
+    
+    <select id="selectMpMerchantById" parameterType="Long" resultMap="MerchantSettingResult">
+        <include refid="selectMpMerchantVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMpMerchant" parameterType="MpMerchant" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_merchant
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+			<if test="status != null  ">status,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="contactName != null  and contactName != ''  ">contact_name,</if>
+			<if test="contactPhone != null  and contactPhone != ''  ">contact_phone,</if>
+			<if test="contactEmail != null  and contactEmail != ''  ">contact_email,</if>
+			<if test="secretKey != null  and secretKey != ''  ">secret_key,</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">withdrawal_password,</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">google_secret,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="contactName != null  and contactName != ''  ">#{contactName},</if>
+			<if test="contactPhone != null  and contactPhone != ''  ">#{contactPhone},</if>
+			<if test="contactEmail != null  and contactEmail != ''  ">#{contactEmail},</if>
+			<if test="secretKey != null  and secretKey != ''  ">#{secretKey},</if>
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">#{withdrawalPassword},</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">#{googleSecret},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMpMerchant" parameterType="MerchantSetting">
+        update mp_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">withdrawal_password = #{withdrawalPassword},</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">google_secret = #{googleSecret},</if>
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+            <if test="secretKey != null  and secretKey != ''  ">secret_key = #{secretKey},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMpMerchantById" parameterType="Long">
+        delete from mp_merchant where id = #{id}
+    </delete>
+	
+    <delete id="deleteMpMerchantByIds" parameterType="String">
+        delete from mp_merchant where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <update id="updateMerchantMethod" parameterType="MerchantSetting">
+        update mp_merchant_method
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null  and code != ''  ">merchant_code = #{code},</if>
+        </trim>
+        where merchant_id = #{id}
+    </update>
+
+
+</mapper>

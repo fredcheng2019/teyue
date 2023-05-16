@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.financial.mapper.FinancialWalletMapper">
+    
+    <resultMap type="FinancialWallet" id="FinancialWalletResult">
+        <result property="id"    column="id"    />
+        <result property="channelId"    column="channel_id"    />
+        <result property="accountBalance"    column="account_balance"    />
+        <result property="frozenBalance"    column="frozen_balance"    />
+    </resultMap>
+
+    <resultMap id="FinancialWalletRspResult" type="com.ruoyi.financial.domain.FinancialWalletRSP" extends="FinancialWalletResult" autoMapping="true">
+    </resultMap>
+
+
+	<sql id="selectFinancialWalletVo">
+        select id, channel_id, account_balance, frozen_balance from mp_financial_wallet
+    </sql>
+	
+    <select id="selectFinancialWalletList" parameterType="FinancialWallet" resultMap="FinancialWalletRspResult">
+        SELECT
+        mfw.*,
+        mc.name as channelName
+        FROM
+        `mp_financial_wallet` mfw
+        LEFT JOIN `mp_channel` mc
+        ON mfw.channel_id = mc.id
+        <where>  
+            <if test="id != null "> and mfw.id = #{id}</if>
+             <if test="channelId != null "> and mfw.channel_id = #{channelId}</if>
+             <if test="accountBalance != null "> and mfw.account_balance = #{accountBalance}</if>
+             <if test="frozenBalance != null "> and mfw.frozen_balance = #{frozenBalance}</if>
+         </where>
+    </select>
+    
+    <select id="selectFinancialWalletById" parameterType="Long" resultMap="FinancialWalletResult">
+        <include refid="selectFinancialWalletVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinancialWallet" parameterType="FinancialWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_financial_wallet
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="channelId != null  ">channel_id,</if>
+			<if test="accountBalance != null  ">account_balance,</if>
+			<if test="frozenBalance != null  ">frozen_balance,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="channelId != null  ">#{channelId},</if>
+			<if test="accountBalance != null  ">#{accountBalance},</if>
+			<if test="frozenBalance != null  ">#{frozenBalance},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateFinancialWallet" parameterType="FinancialWallet">
+        update mp_financial_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="channelId != null  ">channel_id = #{channelId},</if>
+            <if test="accountBalance != null  ">account_balance = #{accountBalance},</if>
+            <if test="frozenBalance != null  ">frozen_balance = #{frozenBalance},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteFinancialWalletById" parameterType="Long">
+        delete from mp_financial_wallet where id = #{id}
+    </delete>
+	
+    <delete id="deleteFinancialWalletByIds" parameterType="String">
+        delete from mp_financial_wallet where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectFinancialWalletByChannelIdAndWalletKindId"  resultMap="FinancialWalletResult">
+        select id, channel_id, account_balance, frozen_balance from mp_financial_wallet
+        where
+        channel_id = #{channelId}
+    </select>
+
+
+
+
+    <select id="selectFinancialWalletByChannelId"  resultMap="FinancialWalletResult">
+        select id, channel_id account_balance, frozen_balance from mp_financial_wallet
+        where
+        channel_id = #{channelId}
+    </select>
+
+
+
+    <select id="selectFinancialWalletByChannelIdList"  resultMap="FinancialWalletRspResult">
+        SELECT
+        mfw.*,
+        mc.name as channelName
+        FROM
+        `mp_financial_wallet` mfw
+        LEFT JOIN `mp_channel` mc
+        ON mfw.channel_id = mc.id
+        where
+        mfw.channel_id in
+        <foreach item="channel_id" index="j" collection="channelIdList" open="(" separator="," close=")">
+            ${channel_id}
+        </foreach>
+    </select>
+
+    <update id="updateFinance" parameterType="map">
+       update mp_financial_wallet set account_balance = account_balance + #{finFee} where channel_id = #{channelId}
+    </update>
+
+</mapper>

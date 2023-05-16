@@ -1,0 +1,118 @@
+# 数据源配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      master:
+        url: jdbc:mysql://localhost:13308/teyueai?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: fred007!
+
+        #url: jdbc:mysql://103.194.104.98:3306/sifang?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+        #username: sifang
+        #password: nenyifu@qq.qazxsw
+      # 从库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: false
+        url:
+        username:
+        password:
+      # 初始连接数
+      initialSize: 2
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /monitor/druid/*
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+
+# Http接口url地址配置
+reqUrlConfig:
+  #==================================Manager===================================
+  managerCheckPay: http://localhost:9082/api/manager/checkPay
+
+  managerCheckWithdrawal: http://localhost:9082/api/manager/checkWithdrawal
+  # 补单,通知商户回调成功
+  managerNotifyPay: http://localhost:9082/api/manager/notifyPay
+  # 补单,通知商户代付成功成功
+  managerNotifyWithdrawal: http://localhost:9082/api/manager/notifyWithdrawal
+  # 确认余额
+  managerCheckBalance: http://localhost:9082/api/manager/checkBalance
+
+  managerFinanceWithdrawal: http://localhost:9082/api/manager/financeWithdrawal
+  # 开空单接口
+  managerPay: http://localhost:9082/api/manager/pay
+
+  managerWithdrawal: http://localhost:9082/api/manager/withdrawal
+
+  managerSureApply: http://localhost:9082/api/manager/sureApply
+
+  #==================================Merchant====================================
+  # 下单接口
+  merchantPay: http://localhost:9082/api/pay/order
+  # 查询订单接口
+  merchantCheckPay: http://localhost:9082/api/pay/orderQuery
+  # 申请代付方法
+  merchantWithdrawal: http://localhost:9082/api/pay/withdrawal
+  # 查询代付方法
+  merchantCheckWithdrawal: http://localhost:9082/api/pay/withdrawalCheck
+  # 模拟用户回调
+  merchantSimulateNotifyPay: http://localhost:9082/api/merchant/simulateNotifyPay
+  # 模拟代付回调
+  merchantSimulateNotifyWithdrawal: http://localhost:9082/api/merchant/simulateNotifyWithdrawal
+
+openai:
+  # 默认的Token长度
+  max_tokens: ${MAX_TOKENS:2048}
+  # 尝试将值设为 0.9 以获得更有创意的回复，将值设为 0 以获得具有明确答案的回复
+  temperature: ${TEMPERATURE:0.7}
+  # 默认的AI模型，gpt-3.5-turbo or gpt-3.5-turbo-0301	，区别：https://platform.openai.com/docs/models/gpt-3-5
+  #gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314
+  #model: gpt-3.5-turbo
+  model: gpt-4
+  # 多个Key用,分割
+  keys: ${KEYS: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}
+  # 综合问答API
+  #openai_api: https://api.openai.com/v1/chat/completions
+  openai_api: http://52.77.229.255/v1/chat/completions
+  # 图片问答API
+  #image_api: https://api.openai.com/v1/images/generations
+  image_api: http://52.77.229.255/v1/images/generations
+  # 余额查询的API
+  #credit_api: https://api.openai.com/dashboard/billing/credit_grants
+  credit_api: http://52.77.229.255/dashboard/billing/credit_grants
+  # ${名称:值} 格式以便于在环境变量中配置，默认只需修改值即可
+
+baidu:
+  # 百度统计的API， 取 xxxx 填入即可 hm.src = "https://hm.baidu.com/hm.js?xxxx";
+  tong_ji_token: ${BD_TONG_JI_TOKEN:}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+  <th:block th:include="include :: header('修改')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+  <form class="form-horizontal m" id="form-mpMerchant-edit" th:object="${mpMerchant}">
+    <input id="id" name="id" th:field="*{id}" type="hidden">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">商户名称：</label>
+      <div class="col-sm-8">
+        <input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">商户编码：</label>
+      <div class="col-sm-8">
+        <input id="code" name="code" th:field="*{code}" class="form-control" type="text" readonly>
+        <!--<a onclick="resetCode()" href="javascript:void(0);" class="btn btn-info btn-xs"-->
+           <!--style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>-->
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">商户秘钥：</label>
+      <div class="col-sm-8">
+        <input id="secretKey" name="secretKey" th:field="*{secretKey}" class="form-control" type="text" readonly>
+        <a onclick="resetSecretKey()" href="javascript:void(0);" class="btn btn-info btn-xs"
+           style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">谷歌秘钥：</label>
+      <div class="col-sm-8">
+        <input id="googleSecret" name="googleSecret" th:field="*{googleSecret}" class="form-control" type="text"
+               readonly>
+        <a onclick="resetGoogleSecret()" href="javascript:void(0);" class="btn btn-info btn-xs"
+           style="margin-left: 100%;margin-top: -9%"><i class="fa fa-refresh"></i>重置</a>
+      </div>
+    </div>
+    <!--<div class="form-group">
+      <label class="col-sm-3 control-label">提款密码：</label>
+      <div class="col-sm-8">
+        <input id="withdrawalPassword" name="withdrawalPassword" th:field="*{withdrawalPassword}" class="form-control"
+               type="password">
+      </div>
+    </div>-->
+    <div class="form-group" shiro:hasPermission="merchant:merchantAgent:add">
+      <label class="col-sm-3 control-label">选择代理：</label>
+      <div class="col-sm-8">
+        <select class="form-control" id="agentId" name="agentId">
+          <option value="" selected>----选择代理----</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">联系人名称：</label>
+      <div class="col-sm-8">
+        <input id="contactName" name="contactName" th:field="*{contactName}" class="form-control" type="text">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">联系人电话：</label>
+      <div class="col-sm-8">
+        <input id="contactPhone" name="contactPhone" th:field="*{contactPhone}" class="form-control" type="text"
+               required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">联系人邮箱：</label>
+      <div class="col-sm-8">
+        <input id="contactEmail" name="contactEmail" th:field="*{contactEmail}" class="form-control" type="text">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">状态：</label>
+      <div class="col-sm-8">
+        <div class="onoffswitch">
+          <input type="checkbox" th:checked="${mpMerchant.status == 0 ? true : false}" class="onoffswitch-checkbox"
+                 id="status" name="status">
+          <label class="onoffswitch-label" for="status">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:inline="javascript">
+  var prefix = ctx + "merchant/merchantInfo";
+  var mpMerchant = [[${mpMerchant}]];
+  /*所属用户下拉框*/
+  $.post(ctx + "system/user/getUserIdByMerchantAdd", {'roleId': '7'}, function (response) {
+    var data = response.rows;
+    var option = "";
+    for (var i = 0; i < data.length; i++) {
+      if (mpMerchant.agentId == data[i].userId) {
+        option += "<option value='" + data[i].userId + "' selected='selected'>" + data[i].userName + "</option>"
+      } else {
+
+        option += "<option value='" + data[i].userId + "'>" + data[i].userName + "</option>"
+      }
+    }
+    option += "<option value=\"\" selected>不设置代理</option>";
+    $("#form-mpMerchant-edit").find("select[name='agentId']").html("").append(option);
+  });
+
+  $.validator.addMethod("mobile", function (value, element, params) {
+    var exp_mobile = new RegExp(params);
+    return exp_mobile.test(value);
+  }, "请输入正确的手机号码");
+  $("#form-mpMerchant-edit").validate({
+    rules: {
+      name: {
+        required: true,
+        remote: {
+          url: prefix + "/checkMerchantNameUnique",
+          type: "post",
+          dataType: "json",
+          data: {
+            "id": function () {
+              return $("input[name='id']").val();
+            },
+            "name": function () {
+              return $.common.trim($("#name").val());
+            }
+          },
+          dataFilter: function (data, type) {
+            return $.validate.unique(data);
+          }
+        }
+      },
+      code: {
+        required: true
+      },
+      contactPhone: {
+        mobile: "^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\d{8}$"
+      },
+      contactEmail: {
+        email: true
+      }
+    },
+    messages: {
+      "name": {
+        remote: "商户名称已经存在"
+      }
+    },
+    focusCleanup: true
+  });
+
+  /**
+   * 商户编码重置
+   */
+  function resetCode() {
+    $.post(prefix + "/resetMerchantNo", {}, function (response) {
+      var newCode = response;
+      $("#form-mpMerchant-edit").find("input[name='code']").val(newCode);
+    });
+  }
+
+  /**
+   * 商户秘钥重置
+   */
+  function resetSecretKey() {
+    $.post(prefix + "/resetCode/my", {}, function (response) {
+      var newCode = response;
+      $("#form-mpMerchant-edit").find("input[name='secretKey']").val(newCode);
+    });
+  }
+
+  /**
+   * 谷歌秘钥重置
+   */
+  function resetGoogleSecret() {
+    $.post(prefix + "/resetCode/gg", {}, function (response) {
+      var newCode = response;
+      $("#form-mpMerchant-edit").find("input[name='googleSecret']").val(newCode);
+    });
+  }
+
+
+  function submitHandler() {
+    if ($.validate.form()) {
+      var data = $("#form-mpMerchant-edit").serializeArray();
+      var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
+      if (status != 0) {
+        data.push({"name": "status", "value": status});
+      } else {
+        for (var i in data) {
+          if (data[i].name == 'status') {
+            data[i].value = status;
+          }
+        }
+      }
+      $.operate.save(prefix + "/edit", data);
+    }
+  }
+</script>
+</body>
+</html>

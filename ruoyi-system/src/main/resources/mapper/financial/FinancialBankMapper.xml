@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.financial.mapper.FinancialBankMapper">
+    
+    <resultMap type="FinancialBank" id="FinancialBankResult">
+        <result property="id"    column="id"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="bankBranch"    column="bank_branch"    />
+        <result property="bankSubBranch"    column="bank_sub_branch"    />
+        <result property="bankProvince"    column="bank_province"    />
+        <result property="bankCity"    column="bank_city"    />
+        <result property="bankUnionNo"    column="bank_union_no"    />
+        <result property="bankAccountOwner"    column="bank_account_owner"    />
+        <result property="bankAccountNo"    column="bank_account_no"    />
+        <result property="bankAccountType"    column="bank_account_type"    />
+    </resultMap>
+	
+	<sql id="selectFinancialBankVo">
+        select id, bank_id, bank_branch, bank_sub_branch, bank_province, bank_city, bank_union_no, bank_account_owner, bank_account_no, bank_account_type from mp_financial_bank
+    </sql>
+
+    <resultMap id="FinancialBankRspResult" type="com.ruoyi.financial.domain.FinancialBankRSP" extends="FinancialBankResult" autoMapping="true">
+    </resultMap>
+
+
+    <select id="selectFinancialBankList" parameterType="FinancialBank" resultMap="FinancialBankRspResult">
+        SELECT
+        mfb.*,
+        mb.name AS bankName
+        FROM
+        `mp_financial_bank` mfb
+        LEFT JOIN `mp_bank` mb
+        ON
+        mfb.bank_id = mb.id
+        <where>  
+            <if test="id != null "> and mfb.id = #{id}</if>
+             <if test="bankId != null "> and mfb.bank_id = #{bankId}</if>
+             <if test="bankBranch != null  and bankBranch != '' "> and mfb.bank_branch like concat('%', #{bankBranch}, '%')</if>
+             <if test="bankSubBranch != null  and bankSubBranch != '' "> and mfb.bank_sub_branch like concat('%', #{bankSubBranch}, '%')</if>
+             <if test="bankProvince != null  and bankProvince != '' "> and mfb.bank_province = #{bankProvince}</if>
+             <if test="bankCity != null  and bankCity != '' "> and mfb.bank_city = #{bankCity}</if>
+             <if test="bankUnionNo != null  and bankUnionNo != '' "> and mfb.bank_union_no = #{bankUnionNo}</if>
+             <if test="bankAccountOwner != null  and bankAccountOwner != '' "> and mfb.bank_account_owner = #{bankAccountOwner}</if>
+             <if test="bankAccountNo != null  and bankAccountNo != '' "> and mfb.bank_account_no = #{bankAccountNo}</if>
+             <if test="bankAccountType != null "> and mfb.bank_account_type = #{bankAccountType}</if>
+         </where>
+    </select>
+    
+    <select id="selectFinancialBankById" parameterType="Long" resultMap="FinancialBankResult">
+        <include refid="selectFinancialBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinancialBank" parameterType="FinancialBank" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_financial_bank
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bankId != null  ">bank_id,</if>
+			<if test="bankBranch != null  and bankBranch != ''  ">bank_branch,</if>
+			<if test="bankSubBranch != null  and bankSubBranch != ''  ">bank_sub_branch,</if>
+			<if test="bankProvince != null  and bankProvince != ''  ">bank_province,</if>
+			<if test="bankCity != null  and bankCity != ''  ">bank_city,</if>
+			<if test="bankUnionNo != null  and bankUnionNo != ''  ">bank_union_no,</if>
+			<if test="bankAccountOwner != null  and bankAccountOwner != ''  ">bank_account_owner,</if>
+			<if test="bankAccountNo != null  and bankAccountNo != ''  ">bank_account_no,</if>
+			<if test="bankAccountType != null  ">bank_account_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bankId != null  ">#{bankId},</if>
+			<if test="bankBranch != null  and bankBranch != ''  ">#{bankBranch},</if>
+			<if test="bankSubBranch != null  and bankSubBranch != ''  ">#{bankSubBranch},</if>
+			<if test="bankProvince != null  and bankProvince != ''  ">#{bankProvince},</if>
+			<if test="bankCity != null  and bankCity != ''  ">#{bankCity},</if>
+			<if test="bankUnionNo != null  and bankUnionNo != ''  ">#{bankUnionNo},</if>
+			<if test="bankAccountOwner != null  and bankAccountOwner != ''  ">#{bankAccountOwner},</if>
+			<if test="bankAccountNo != null  and bankAccountNo != ''  ">#{bankAccountNo},</if>
+			<if test="bankAccountType != null  ">#{bankAccountType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateFinancialBank" parameterType="FinancialBank">
+        update mp_financial_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bankId != null  ">bank_id = #{bankId},</if>
+            <if test="bankBranch != null  and bankBranch != ''  ">bank_branch = #{bankBranch},</if>
+            <if test="bankSubBranch != null  and bankSubBranch != ''  ">bank_sub_branch = #{bankSubBranch},</if>
+            <if test="bankProvince != null  and bankProvince != ''  ">bank_province = #{bankProvince},</if>
+            <if test="bankCity != null  and bankCity != ''  ">bank_city = #{bankCity},</if>
+            <if test="bankUnionNo != null  and bankUnionNo != ''  ">bank_union_no = #{bankUnionNo},</if>
+            <if test="bankAccountOwner != null  and bankAccountOwner != ''  ">bank_account_owner = #{bankAccountOwner},</if>
+            <if test="bankAccountNo != null  and bankAccountNo != ''  ">bank_account_no = #{bankAccountNo},</if>
+            <if test="bankAccountType != null  ">bank_account_type = #{bankAccountType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteFinancialBankById" parameterType="Long">
+        delete from mp_financial_bank where id = #{id}
+    </delete>
+	
+    <delete id="deleteFinancialBankByIds" parameterType="String">
+        delete from mp_financial_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

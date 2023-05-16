@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.financial.mapper.MpFinancialSettingMapper">
+    
+    <resultMap type="MpFinancialSetting" id="MpFinancialSettingResult">
+        <result property="id"    column="id"    />
+        <result property="withdrawalPassword"    column="withdrawal_password"    />
+        <result property="googleSecret"    column="google_secret"    />
+        <result property="mchWithdrawalRule"    column="mch_withdrawal_rule"    />
+        <result property="withdrawalInner"    column="withdrawal_inner"    />
+        <result property="withdrawalAudit"    column="withdrawal_audit"    />
+        <result property="channelWhite"    column="channel_white"    />
+        <result property="merchantWhite"    column="merchant_white"    />
+    </resultMap>
+	
+	<sql id="selectMpFinancialSettingVo">
+        select id, withdrawal_password, google_secret, mch_withdrawal_rule,withdrawal_inner, withdrawal_audit, channel_white, merchant_white from mp_financial_setting
+    </sql>
+	
+    <select id="selectMpFinancialSettingList" parameterType="MpFinancialSetting" resultMap="MpFinancialSettingResult">
+        <include refid="selectMpFinancialSettingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="withdrawalPassword != null  and withdrawalPassword != '' "> and withdrawal_password = #{withdrawalPassword}</if>
+             <if test="googleSecret != null  and googleSecret != '' "> and google_secret = #{googleSecret}</if>
+             <if test="mchWithdrawalRule != null "> and mch_withdrawal_rule = #{mchWithdrawalRule}</if>
+             <if test="withdrawalInner != null "> and withdrawal_inner = #{withdrawalInner}</if>
+             <if test="withdrawalAudit != null "> and withdrawal_audit = #{withdrawalAudit}</if>
+         </where>
+    </select>
+    
+    <select id="selectMpFinancialSettingById" parameterType="Long" resultMap="MpFinancialSettingResult">
+        <include refid="selectMpFinancialSettingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMpFinancialSetting" parameterType="MpFinancialSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_financial_setting
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="withdrawalPassword != null  and withdrawalPassword != ''  ">withdrawal_password,</if>
+			<if test="googleSecret != null  and googleSecret != ''  ">google_secret,</if>
+			<if test="mchWithdrawalRule != null  ">mch_withdrawal_rule,</if>
+			<if test="withdrawalInner != null  ">withdrawal_inner,</if>
+			<if test="withdrawalAudit != null  ">withdrawal_audit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="withdrawalPassword != null  and withdrawalPassword != ''  ">#{withdrawalPassword},</if>
+			<if test="googleSecret != null  and googleSecret != ''  ">#{googleSecret},</if>
+			<if test="mchWithdrawalRule != null  ">#{mchWithdrawalRule},</if>
+			<if test="withdrawalInner != null  ">#{withdrawalInner},</if>
+			<if test="withdrawalAudit != null  ">#{withdrawalAudit},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMpFinancialSetting" parameterType="MpFinancialSetting">
+        update mp_financial_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="withdrawalPassword != null  and withdrawalPassword != ''  ">withdrawal_password = #{withdrawalPassword},</if>
+            <if test="googleSecret != null  and googleSecret != ''  ">google_secret = #{googleSecret},</if>
+            <if test="mchWithdrawalRule != null  ">mch_withdrawal_rule = #{mchWithdrawalRule},</if>
+            <if test="withdrawalInner != null  ">withdrawal_inner = #{withdrawalInner},</if>
+            <if test="withdrawalAudit != null  ">withdrawal_audit = #{withdrawalAudit},</if>
+            <if test="channelWhite != null  ">channel_white = #{channelWhite},</if>
+            <if test="merchantWhite != null  ">merchant_white = #{merchantWhite},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMpFinancialSettingById" parameterType="Long">
+        delete from mp_financial_setting where id = #{id}
+    </delete>
+	
+    <delete id="deleteMpFinancialSettingByIds" parameterType="String">
+        delete from mp_financial_setting where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.MerchantWalletFlowMapper">
+
+  <resultMap type="MerchantWalletFlow" id="MerchantWalletFlowResult">
+    <result property="id"    column="id"    />
+    <result property="merchantId"    column="merchant_id"    />
+    <result property="merchantName"    column="merchant_name"    />
+    <result property="amount"    column="amount"    />
+    <result property="previousBalance"    column="previous_balance"    />
+    <result property="currentBalance"    column="current_balance"    />
+    <result property="remark"    column="remark"    />
+    <result property="createdTime"    column="created_time"    />
+    <result property="createdBy"    column="created_by"    />
+    <result property="flowType"    column="flow_type"    />
+    <result property="flowDirection"    column="flow_direction"    />
+    <result property="flowDetailType"    column="flow_detail_type"    />
+    <result property="orderId"    column="order_id"    />
+  </resultMap>
+
+  <sql id="selectMerchantWalletFlowVo">
+        select id, merchant_id, merchant_name, amount, previous_balance, current_balance, remark, created_time, created_by,flow_type,flow_direction,flow_detail_type, order_id from mp_merchant_wallet_flow
+    </sql>
+
+  <select id="selectMerchantWalletFlowList" parameterType="MerchantWalletFlow" resultMap="MerchantWalletFlowResult">
+    <include refid="selectMerchantWalletFlowVo"/>
+    <where>
+      <if test="id != null "> and id = #{id}</if>
+      <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
+      <if test="merchantName != null  and merchantName != '' "> and merchant_name = #{merchantName}</if>
+      <if test="amount != null "> and amount = #{amount}</if>
+      <if test="previousBalance != null "> and previous_balance = #{previousBalance}</if>
+      <if test="currentBalance != null "> and current_balance = #{currentBalance}</if>
+      <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+      <if test="flowType != null  and flowType != '' "> and flow_type = #{flowType}</if>
+      <if test="flowDirection != null  and flowDirection != '' "> and flow_direction = #{flowDirection}</if>
+      <if test="flowDetailType != null  and flowDetailType != '' "> and flow_detail_type = #{flowDetailType}</if>
+      <if test="createdTime != null "> and created_time = #{createdTime}</if>
+      <if test="createdBy != null  and createdBy != '' "> and created_by = #{createdBy}</if>
+      <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+      <if test="beginTime != null  and beginTime != '' and endTime != null  and endTime != ''">
+       and created_time between date_format(#{beginTime},'%Y-%m-%d 00:00:00') and date_format(#{endTime},'%Y-%m-%d 23:59:59')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectMerchantWalletFlowById" parameterType="Long" resultMap="MerchantWalletFlowResult">
+    <include refid="selectMerchantWalletFlowVo"/>
+    where id = #{id}
+  </select>
+
+  <insert id="insertMerchantWalletFlow" parameterType="MerchantWalletFlow" useGeneratedKeys="true" keyProperty="id">
+    insert into mp_merchant_wallet_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null  ">merchant_id,</if>
+      <if test="merchantName != null  and merchantName != ''  ">merchant_name,</if>
+      <if test="amount != null  ">amount,</if>
+      <if test="previousBalance != null  ">previous_balance,</if>
+      <if test="currentBalance != null  ">current_balance,</if>
+      <if test="remark != null  and remark != ''  ">remark,</if>
+      <if test="createdTime != null  ">created_time,</if>
+      <if test="createdBy != null  and createdBy != ''  ">created_by,</if>
+      <if test="flowType != null  and flowType != ''  ">flow_type,</if>
+      <if test="flowDirection != null  and flowDirection != ''  ">flow_direction,</if>
+      <if test="flowDetailType != null  and flowDetailType != ''  ">flow_detail_type,</if>
+        <if test="orderId != null and orderId != ''">order_id,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null  ">#{merchantId},</if>
+      <if test="merchantName != null  and merchantName != ''  ">#{merchantName},</if>
+      <if test="amount != null  ">#{amount},</if>
+      <if test="previousBalance != null  ">#{previousBalance},</if>
+      <if test="currentBalance != null  ">#{currentBalance},</if>
+      <if test="remark != null  and remark != ''  ">#{remark},</if>
+      <if test="createdTime != null  ">#{createdTime},</if>
+      <if test="createdBy != null  and createdBy != ''  ">#{createdBy},</if>
+      <if test="flowType != null  and flowType != ''  ">#{flowType},</if>
+      <if test="flowDirection != null  and flowDirection != ''  ">#{flowDirection},</if>
+      <if test="flowDetailType != null  and flowDetailType != ''  ">#{flowDetailType},</if>
+        <if test="orderId != null and orderId != ''">#{orderId},</if>
+    </trim>
+  </insert>
+
+  <update id="updateMerchantWalletFlow" parameterType="MerchantWalletFlow">
+    update mp_merchant_wallet_flow
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="merchantId != null  ">merchant_id = #{merchantId},</if>
+      <if test="merchantName != null  and merchantName != ''  ">merchant_name = #{merchantName},</if>
+      <if test="amount != null  ">amount = #{amount},</if>
+      <if test="previousBalance != null  ">previous_balance = #{previousBalance},</if>
+      <if test="currentBalance != null  ">current_balance = #{currentBalance},</if>
+      <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+      <if test="createdTime != null  ">created_time = #{createdTime},</if>
+      <if test="createdBy != null  and createdBy != ''  ">created_by = #{createdBy},</if>
+        <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
+    </trim>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteMerchantWalletFlowById" parameterType="Long">
+        delete from mp_merchant_wallet_flow where id = #{id}
+    </delete>
+
+  <delete id="deleteMerchantWalletFlowByIds" parameterType="String">
+    delete from mp_merchant_wallet_flow where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+</mapper>

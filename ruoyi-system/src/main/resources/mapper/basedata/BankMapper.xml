@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.basedata.mapper.BankMapper">
+    
+    <resultMap type="Bank" id="BankResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+    </resultMap>
+	
+	<sql id="selectBankVo">
+        select id, name, code from mp_bank
+    </sql>
+	
+    <select id="selectBankList" parameterType="Bank" resultMap="BankResult">
+        <include refid="selectBankVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name like concat('%', #{name}, '%')</if>
+             <if test="code != null  and code != '' "> and code like concat('%', #{code}, '%')</if>
+         </where>
+    </select>
+    
+    <select id="selectBankById" parameterType="Integer" resultMap="BankResult">
+        <include refid="selectBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBank" parameterType="Bank" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_bank
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateBank" parameterType="Bank">
+        update mp_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="code != null ">code = #{code},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteBankById" parameterType="Integer">
+        delete from mp_bank where id = #{id}
+    </delete>
+	
+    <delete id="deleteBankByIds" parameterType="String">
+        delete from mp_bank where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="checkBankNameUnique" parameterType="String" resultMap="BankResult">
+		select id, name, code from mp_bank where name=#{name}
+	</select>
+
+
+
+    <select id="selectBankListWithoutBankIds"  resultMap="BankResult">
+		select id, name, code from mp_bank where
+        id not in
+        <foreach item="id" index="j" collection="bankIds" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+	</select>
+
+</mapper>

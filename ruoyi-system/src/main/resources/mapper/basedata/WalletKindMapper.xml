@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.basedata.mapper.WalletKindMapper">
+    
+    <resultMap type="WalletKind" id="WalletKindResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+    </resultMap>
+	
+	<sql id="selectWalletKindVo">
+        select id, name, code from mp_wallet_kind
+    </sql>
+	
+    <select id="selectWalletKindList" parameterType="WalletKind" resultMap="WalletKindResult">
+        <include refid="selectWalletKindVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != '' "> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != '' "> and code like concat('%', #{code}, '%')</if>
+         </where>
+    </select>
+    
+    <select id="selectWalletKindById" parameterType="Integer" resultMap="WalletKindResult">
+        <include refid="selectWalletKindVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWalletKind" parameterType="WalletKind" useGeneratedKeys="true" keyProperty="id">
+        insert into mp_wallet_kind
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateWalletKind" parameterType="WalletKind">
+        update mp_wallet_kind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteWalletKindById" parameterType="Integer">
+        delete from mp_wallet_kind where id = #{id}
+    </delete>
+
+    <delete id="deleteWalletKindByIds" parameterType="String">
+        delete from mp_wallet_kind where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="checkWalletkindUnique" parameterType="String" resultMap="WalletKindResult">
+        select id, name, code FROM mp_wallet_kind WHERE name=#{name}
+	</select>
+
+
+    <select id="selectWalletKindByName" parameterType="String" resultMap="WalletKindResult">
+        select id, name, code FROM mp_wallet_kind WHERE name=#{name}
+	</select>
+
+</mapper>

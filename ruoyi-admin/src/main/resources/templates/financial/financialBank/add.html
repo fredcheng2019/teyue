@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-financialBank-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">银行类型：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankId" name="bankId" required>
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">分行：</label>
+				<div class="col-sm-8">
+					<input id="bankBranch" name="bankBranch" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">支行：</label>
+				<div class="col-sm-8">
+					<input id="bankSubBranch" name="bankSubBranch" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所在省：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankProvince" name="bankProvince" required>
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所在市：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankCity" name="bankCity" required>
+						<option value="" selected>----请选择----</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联行号：</label>
+				<div class="col-sm-8">
+					<input id="bankUnionNo" name="bankUnionNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">持卡人：</label>
+				<div class="col-sm-8">
+					<input id="bankAccountOwner" name="bankAccountOwner" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户号：</label>
+				<div class="col-sm-8">
+					<input id="bankAccountNo" name="bankAccountNo" class="form-control" type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">账户类型：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="bankAccountType" name="bankAccountType" required>
+						<option value=0>对私</option>
+						<option value=1>对公</option>
+					</select>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "financial/financialBank"
+        var $form = $("#form-financialBank-add");
+        var $province = $form.find("select[name='bankProvince']");
+        var $city = $form.find("select[name='bankCity']");
+
+        $form.validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+        /*银行类型下拉框*/
+        $.post(ctx + "payApi/test/bankList", {'name':''},function (response) {
+            var data = response.rows;
+            var option = "<option value=''>" + "请选择" + "</option>";
+            for (var i = 0; i < data.length; i++) {
+                option += "<option value='"+ data[i].id +"'>" + data[i].name + "</option>"
+            }
+            $form.find("select[name='bankId']").html("").append(option);
+        });
+
+
+        /*省市下拉框*/
+        /*初始化-省*/
+        $.post(ctx + "basedata/areas/list",{'levelType':1,'parentId':100000},function (response) {
+            var data = response.rows;
+            var option = "";
+            for (var i = 0; i < data.length; i++){
+                option += "<option value='" + data[i].province + "'>" + data[i].province + "</option>"
+            }
+            $province.html("").append(option);
+        });
+        /*省下拉框-选择事件*/
+        var str="";
+        $province.change(function () {
+            $city.html(str);
+            if ($province.val())
+                getCityOrCounty(2, $province.val(), $city, $city.val());
+        });
+        /*根据省查询市*/
+        function getCityOrCounty(LevelType,province,htm,address) {
+            $.post(ctx + "basedata/areas/parentId", {'levelType':LevelType,'province':province}, function (response) {
+                var data = response.rows;
+                var option = "";
+                for (var i = 0; i < data.length; i++) {
+                    option += "<option value='" + data[i].city + "'>" + data[i].city + "</option>"
+                }
+                htm.html("").append(option);
+            });
+        }
+
+
+
+
+        function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $form.serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
